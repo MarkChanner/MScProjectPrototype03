@@ -38,7 +38,6 @@ public class GameView extends SurfaceView implements Runnable {
     public GameView(Context context, int screenX, int screenY) {
         super(context);
         this.context = context;
-        this.context.getResources();
         surfaceHolder = getHolder();
         emoWidth = screenX / X_MAX;
         emoHeight = screenY / Y_MAX;
@@ -89,12 +88,13 @@ public class GameView extends SurfaceView implements Runnable {
 
         // Highlight an emoticon if Emoticon's isPartOfMatch boolean is true
         canvas.drawRect(highlightSelectionRect, selectionFill);
-
         for (int i = 0; i < X_MAX; i++) {
-            // Horizontal grid lines
-            canvas.drawLine(ZERO, i * emoHeight, getWidth(), i * emoHeight, gridLineColour);
             // Vertical grid lines
             canvas.drawLine(i * emoWidth, ZERO, i * emoWidth, getHeight(), gridLineColour);
+        }
+        for (int i = 0; i < Y_MAX; i++) {
+            // Horizontal grid lines
+            canvas.drawLine(ZERO, i * emoHeight, getWidth(), i * emoHeight, gridLineColour);
         }
 
         Emoticon[][] emoticons = board.getEmoticons();
