@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#007034</color>
+    <color name="scoreboard">#5DB89D</color>
+    <color name="gameboard">#8C8535</color>
+    <color name="highlightbackground">#FFCA00</color>
+    <color name="reservepink">#F26547</color>
+
+</resources>
