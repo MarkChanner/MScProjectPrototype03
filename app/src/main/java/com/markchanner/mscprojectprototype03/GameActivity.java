@@ -7,8 +7,10 @@ import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import java.io.IOException;
 
@@ -18,18 +20,15 @@ import java.io.IOException;
 public class GameActivity extends Activity {
 
     private MediaPlayer mediaPlayer;
-    private GameView view;
+    private GameView gameBoardView;
+    private ScoreBoardView scoreBoardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        // Load the resolution into a Point object
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
+        setContentView(R.layout.activity_game);
 
         mediaPlayer = new MediaPlayer();
         try {
@@ -43,8 +42,33 @@ public class GameActivity extends Activity {
             mediaPlayer = null;
         }
 
-        view = new GameView(this, size.x, size.y);
-        setContentView(view);
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+
+        LinearLayout layout = (LinearLayout) findViewById(R.id.gameLayout);
+        int leftPad = layout.getPaddingLeft();
+        int rightPad = layout.getPaddingRight();
+        int topPad = layout.getPaddingTop();
+        int bottomPad = layout.getPaddingBottom();
+        int gameboardLeftMargin = leftPad;
+
+        int sizeX = (size.x - (leftPad + rightPad + gameboardLeftMargin));
+        int sizeY = (size.y - (topPad + bottomPad));
+
+        int boardX = (int) (sizeX * 0.8);
+        int boardY = sizeY;
+        int scoreX = (int) (sizeX * 0.2);
+        int scoreY = boardY;
+
+        scoreBoardView = new ScoreBoardView(this, scoreX, scoreY);
+        LinearLayout.LayoutParams scoreParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(scoreX, scoreY));
+        layout.addView(scoreBoardView, scoreParams);
+
+        gameBoardView = new GameView(this, boardX, boardY);
+        LinearLayout.LayoutParams boardParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(boardX, boardY));
+        boardParams.setMargins(gameboardLeftMargin, 0, boardX, 0);
+        layout.addView(gameBoardView, boardParams);
     }
 
     @Override
@@ -53,7 +77,7 @@ public class GameActivity extends Activity {
         if (mediaPlayer != null) {
             mediaPlayer.start();
         }
-        view.resume();
+        gameBoardView.resume();
     }
 
     @Override
@@ -66,6 +90,6 @@ public class GameActivity extends Activity {
                 mediaPlayer.release();
             }
         }
-        view.pause();
+        gameBoardView.pause();
     }
 }
