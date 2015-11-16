@@ -26,7 +26,6 @@ public class GameView extends SurfaceView implements Runnable {
     private Paint gridLineColour;
     private Paint selectionFill;
 
-    private Context context;
     private int emoWidth;
     private int emoHeight;
     private Board board;
@@ -37,24 +36,22 @@ public class GameView extends SurfaceView implements Runnable {
 
     public GameView(Context context, int screenX, int screenY) {
         super(context);
-        this.context = context;
         surfaceHolder = getHolder();
         emoWidth = screenX / X_MAX;
         emoHeight = screenY / Y_MAX;
-        startGame();
+        startGame(context);
     }
 
-    private void startGame() {
+    private void startGame(Context context) {
         backgroundColour = new Paint();
-        backgroundColour.setColor(Color.parseColor("#7EC0EE"));
-
-        gridLineColour = new Paint();
-        gridLineColour.setStyle(Paint.Style.STROKE);
-        gridLineColour.setStrokeWidth(2f);
-        gridLineColour.setColor(Color.BLACK);
-
         selectionFill = new Paint();
-        selectionFill.setColor(Color.parseColor("#fff2a8"));
+        gridLineColour = new Paint();
+
+        backgroundColour.setColor(context.getResources().getColor(R.color.gameboard));
+        selectionFill.setColor(context.getResources().getColor(R.color.highlightbackground));
+        gridLineColour.setColor(Color.BLACK);
+        gridLineColour.setStyle(Paint.Style.STROKE);
+        gridLineColour.setStrokeWidth(5f);
 
         board = new BoardImpl(context, emoWidth, emoHeight);
         selections = new SelectionImpl();
@@ -85,8 +82,9 @@ public class GameView extends SurfaceView implements Runnable {
     public void drawIt(Canvas canvas) {
         // Draw the background
         canvas.drawRect(ZERO, ZERO, getWidth(), getHeight(), backgroundColour);
+        canvas.drawRect(ZERO, ZERO, getWidth(), getHeight(), gridLineColour);
 
-        // Highlight an emoticon if Emoticon's isPartOfMatch boolean is true
+        // Highlight an emoticon if Emoticon boolean isPartOfMatch is true
         canvas.drawRect(highlightSelectionRect, selectionFill);
         for (int i = 0; i < X_MAX; i++) {
             // Vertical grid lines
@@ -102,7 +100,6 @@ public class GameView extends SurfaceView implements Runnable {
             for (int x = 0; x < X_MAX; x++) {
                 Emoticon e = emoticons[x][y];
 
-                // if isPartOfMatch is true, highlight that emoticon's background
                 if (e.isPartOfMatch()) {
                     int emoX = e.getScreenPositionX();
                     int emoY = e.getScreenPositionY();
