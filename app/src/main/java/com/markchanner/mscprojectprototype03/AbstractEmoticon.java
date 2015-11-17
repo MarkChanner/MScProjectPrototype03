@@ -19,12 +19,12 @@ public abstract class AbstractEmoticon implements Emoticon {
     private int screenPositionX;
     private int screenPositionY;
     private int pixelMovement; // consider making this a constructor argument
-    volatile boolean lowerEmoticon;
-    volatile boolean swapUp;
-    volatile boolean swapDown;
-    volatile boolean swapRight;
-    volatile boolean swapLeft;
-    volatile boolean isPartOfMatch;
+    volatile boolean lowerEmoticon = false;
+    volatile boolean swapUp = false;
+    volatile boolean swapDown = false;
+    volatile boolean swapRight = false;
+    volatile boolean swapLeft = false;
+    volatile boolean isPartOfMatch = false;
 
     public AbstractEmoticon(int arrayX, int arrayY, int emoWidth, int emoHeight, Bitmap bitmap, String emoticonType, int offScreenStartPositionY) {
         this.arrayX = arrayX;
@@ -57,7 +57,7 @@ public abstract class AbstractEmoticon implements Emoticon {
 
     @Override
     public void setIsPartOfMatch(boolean bool) {
-        isPartOfMatch = true;
+        isPartOfMatch = bool;
     }
 
     @Override
@@ -89,8 +89,8 @@ public abstract class AbstractEmoticon implements Emoticon {
     }
 
     @Override
-    public void setSwapUp(boolean swapUp) {
-        this.swapUp = swapUp;
+    public void setSwapUp(boolean bool) {
+        swapUp = bool;
     }
 
     @Override
@@ -110,8 +110,8 @@ public abstract class AbstractEmoticon implements Emoticon {
     }
 
     @Override
-    public void setSwapDown(boolean swapDown) {
-        this.swapDown = swapDown;
+    public void setSwapDown(boolean bool) {
+        swapDown = bool;
     }
 
     @Override
@@ -131,8 +131,8 @@ public abstract class AbstractEmoticon implements Emoticon {
     }
 
     @Override
-    public void setSwapRight(boolean swapRight) {
-        this.swapRight = swapRight;
+    public void setSwapRight(boolean bool) {
+        swapRight = bool;
     }
 
     @Override
@@ -152,8 +152,8 @@ public abstract class AbstractEmoticon implements Emoticon {
     }
 
     @Override
-    public void setSwapLeft(boolean swapLeft) {
-        this.swapLeft = swapLeft;
+    public void setSwapLeft(boolean bool) {
+        swapLeft = bool;
     }
 
     @Override
