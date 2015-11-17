@@ -34,6 +34,16 @@ public class GameView extends SurfaceView implements Runnable {
 
     volatile boolean running = false;
 
+    /**
+     * try drawing the grid to a bitmap upon initialization, then
+     * draw it, before the emoticons, on every draw call.
+     * Try to make all bitmaps the exact size you want to
+     * draw them on screen, as scaling uses CPU
+     * Use a consistent Bitmap Configuration (like RGBA8888) throughout
+     * the game.  This will save the graphics library CPU from
+     * having to translate the different formats.
+     */
+
     public GameView(Context context, int screenX, int screenY) {
         super(context);
         surfaceHolder = getHolder();
@@ -79,6 +89,9 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
+    /**
+     * Try to draw all grid lines to a bitmap as drawLine is quite costly
+     */
     public void drawIt(Canvas canvas) {
         // Draw the background
         canvas.drawRect(ZERO, ZERO, getWidth(), getHeight(), backgroundColour);

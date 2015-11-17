@@ -14,6 +14,9 @@ import java.io.IOException;
  */
 public class SoundManager {
 
+    /**
+     * Try to keep the sound small and at a low bitrate
+     */
     private SoundPool soundPool;
 
     private int invalidMoveID = -1;

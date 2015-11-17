@@ -31,7 +31,6 @@ public class ScoreBoardView extends View {
     private void startGame(Context context) {
         backgroundColour = new Paint();
         gridLineColour = new Paint();
-
         backgroundColour.setColor(context.getResources().getColor(R.color.scoreboard));
         gridLineColour.setStyle(Paint.Style.STROKE);
         gridLineColour.setStrokeWidth(5f);
