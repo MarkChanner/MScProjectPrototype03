@@ -10,7 +10,8 @@ import android.view.View;
 public class ScoreBoardView extends View {
 
     public static final int ZERO = 0;
-    private Bitmap scoreBoardBitmap;
+
+    private Bitmap scoreBitmap;
 
     public ScoreBoardView(Context context, int viewX, int viewY) {
         super(context);
@@ -18,25 +19,26 @@ public class ScoreBoardView extends View {
     }
 
     private void prepareCanvas(Context context, int viewX, int viewY) {
-        Paint borderColour = new Paint();
-        borderColour.setColor(context.getResources().getColor(R.color.scoreboard));
+        Paint paint = new Paint();
+        scoreBitmap = Bitmap.createBitmap(viewX, viewY, Bitmap.Config.RGB_565);
+        Canvas scoreCanvas = new Canvas(scoreBitmap);
 
-        Paint gridLineColour = new Paint();
-        gridLineColour.setStyle(Paint.Style.STROKE);
-        gridLineColour.setStrokeWidth(5f);
-        gridLineColour.setColor(Color.BLACK);
+        paint.setColor(context.getResources().getColor(R.color.scoreboard));
+        scoreCanvas.drawRect(ZERO, ZERO, viewX, viewY, paint);
 
-        scoreBoardBitmap = Bitmap.createBitmap(viewX, viewY, Bitmap.Config.RGB_565);
-        Canvas scoreCanvas = new Canvas(scoreBoardBitmap);
-        scoreCanvas.drawRect(ZERO, ZERO, viewX, viewY, borderColour);
-        scoreCanvas.drawRect(ZERO, ZERO, viewX, viewY, gridLineColour);
+        paint.setColor(Color.BLACK);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(5f);
+        scoreCanvas.drawRect(ZERO, ZERO, viewX, viewY, paint);
 
-        invalidate();
+        paint.setTextSize(80);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setTextAlign(Paint.Align.CENTER);
+        scoreCanvas.drawText("Score", viewX / 2, 100, paint);
     }
 
     @Override
     public void onDraw(Canvas canvas) {
-        canvas.drawBitmap(scoreBoardBitmap, ZERO, ZERO, null);
-
+        canvas.drawBitmap(scoreBitmap, ZERO, ZERO, null);
     }
 }
