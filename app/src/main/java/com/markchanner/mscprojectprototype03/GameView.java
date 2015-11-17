@@ -1,5 +1,6 @@
 package com.markchanner.mscprojectprototype03;
 
+import android.graphics.Bitmap;
 import android.view.SurfaceView;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -22,9 +23,10 @@ public class GameView extends SurfaceView implements Runnable {
     private final Rect highlightSelectionRect = new Rect();
     private final Rect highlightMatchRect = new Rect();
     private SurfaceHolder surfaceHolder;
-    private Paint backgroundColour;
+    private Paint gameBoardColour;
     private Paint gridLineColour;
     private Paint selectionFill;
+    private Bitmap gridBitmap;
 
     private int emoWidth;
     private int emoHeight;
@@ -35,34 +37,43 @@ public class GameView extends SurfaceView implements Runnable {
     volatile boolean running = false;
 
     /**
-     * try drawing the grid to a bitmap upon initialization, then
-     * draw it, before the emoticons, on every draw call.
-     * Try to make all bitmaps the exact size you want to
-     * draw them on screen, as scaling uses CPU
-     * Use a consistent Bitmap Configuration (like RGBA8888) throughout
-     * the game.  This will save the graphics library CPU from
-     * having to translate the different formats.
+     * Try to a consistent Bitmap
+     * configuration throughout (like RGB_565)
      */
-
-    public GameView(Context context, int screenX, int screenY) {
+    public GameView(Context context, int viewX, int viewY) {
         super(context);
         surfaceHolder = getHolder();
-        emoWidth = screenX / X_MAX;
-        emoHeight = screenY / Y_MAX;
+        emoWidth = viewX / X_MAX;
+        emoHeight = viewY / Y_MAX;
+        prepareCanvas(context, viewX, viewY);
         startGame(context);
     }
 
-    private void startGame(Context context) {
-        backgroundColour = new Paint();
+    private void prepareCanvas(Context context, int screenX, int screenY) {
+        gameBoardColour = new Paint();
         selectionFill = new Paint();
         gridLineColour = new Paint();
 
-        backgroundColour.setColor(context.getResources().getColor(R.color.gameboard));
+        gameBoardColour.setColor(context.getResources().getColor(R.color.gameboard));
         selectionFill.setColor(context.getResources().getColor(R.color.highlightbackground));
         gridLineColour.setColor(Color.BLACK);
         gridLineColour.setStyle(Paint.Style.STROKE);
         gridLineColour.setStrokeWidth(5f);
 
+        gridBitmap = Bitmap.createBitmap(screenX, screenY, Bitmap.Config.RGB_565);
+        Canvas gridCanvas = new Canvas(gridBitmap);
+        gridCanvas.drawRect(ZERO, ZERO, screenX, screenY, gameBoardColour);
+        gridCanvas.drawRect(ZERO, ZERO, screenX, screenY, gridLineColour);
+        for (int i = 0; i < X_MAX; i++) {
+            gridCanvas.drawLine(i * emoWidth, ZERO, i * emoWidth, screenY, gridLineColour); // Vertical
+        }
+        for (int i = 0; i < Y_MAX; i++) {
+            gridCanvas.drawLine(ZERO, i * emoHeight, screenX, i * emoHeight, gridLineColour); // Horizontal
+        }
+        gridCanvas.drawBitmap(gridBitmap, ZERO, ZERO, null);
+    }
+
+    private void startGame(Context context) {
         board = new BoardImpl(context, emoWidth, emoHeight);
         selections = new SelectionImpl();
     }
@@ -89,24 +100,11 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
-    /**
-     * Try to draw all grid lines to a bitmap as drawLine is quite costly
-     */
     public void drawIt(Canvas canvas) {
-        // Draw the background
-        canvas.drawRect(ZERO, ZERO, getWidth(), getHeight(), backgroundColour);
-        canvas.drawRect(ZERO, ZERO, getWidth(), getHeight(), gridLineColour);
-
-        // Highlight an emoticon if Emoticon boolean isPartOfMatch is true
+        canvas.drawBitmap(gridBitmap, ZERO, ZERO, null); // Draws background
+        // Highlight the background of a selected Emoticon
         canvas.drawRect(highlightSelectionRect, selectionFill);
-        for (int i = 0; i < X_MAX; i++) {
-            // Vertical grid lines
-            canvas.drawLine(i * emoWidth, ZERO, i * emoWidth, getHeight(), gridLineColour);
-        }
-        for (int i = 0; i < Y_MAX; i++) {
-            // Horizontal grid lines
-            canvas.drawLine(ZERO, i * emoHeight, getWidth(), i * emoHeight, gridLineColour);
-        }
+        canvas.drawRect(highlightSelectionRect, gridLineColour);
 
         Emoticon[][] emoticons = board.getEmoticons();
         for (int y = Y_MAX - 1; y >= 0; y--) {
