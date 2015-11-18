@@ -241,7 +241,7 @@ public class BoardImpl implements Board {
 
         for (int x = ROW_START; x < X_MAX; x++) {
 
-            offScreenStartPosition = 0;
+            offScreenStartPosition = -1;
 
             for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
 
@@ -251,19 +251,19 @@ public class BoardImpl implements Board {
                         runnerY--;
                     }
                     if (runnerY >= COLUMN_TOP) {
+                        int tempY = emoticons[x][y].getArrayY();
                         emoticons[x][y] = emoticons[x][runnerY];
-                        emoticons[x][y].setArrayY(emoticons[x][runnerY].getArrayY());
+                        emoticons[x][y].setArrayY(tempY);
+                        emoticons[x][y].setLowerEmoticon(true);
+
                         emoticons[x][runnerY] = populator.getEmptyEmoticon(x, runnerY, emoticonWidth, emoticonHeight);
                     } else {
-                        offScreenStartPosition--;
                         emoticons[x][y] = populator.generateEmoticon(x, y, emoticonWidth, emoticonHeight, offScreenStartPosition);
+                        offScreenStartPosition--;
                     }
-
-                    emoticons[x][y].setLowerEmoticon(true);
                 }
             }
         }
-        updateEmoticonValues();
         waitForAnimationToFinish();
     }
 
