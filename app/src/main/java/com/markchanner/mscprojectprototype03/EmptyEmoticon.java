@@ -12,7 +12,6 @@ public class EmptyEmoticon extends AbstractEmoticon {
     public EmptyEmoticon(int x, int y, int emoWidth, int emoHeight, Bitmap emptyBitmap) {
         super(x, y, emoWidth, emoHeight, emptyBitmap, EMOTION_TYPE, y);
         super.setScreenPositionY(y * emoHeight);
-        super.setLowering(false);
     }
 }
 
