@@ -17,7 +17,6 @@ public class GameView extends SurfaceView implements Runnable {
 
     public static final int X_MAX = BoardImpl.X_MAX;
     public static final int Y_MAX = BoardImpl.Y_MAX;
-    public static final int ONE_MILLISECOND = 1;
     public static final int ZERO = 0;
 
     private final Rect highlightSelectionRect = new Rect();
@@ -91,9 +90,8 @@ public class GameView extends SurfaceView implements Runnable {
             if (surfaceHolder.getSurface().isValid()) {
                 canvas = surfaceHolder.lockCanvas();
                 synchronized (this) {
-                    board.updateEmoticonMovements();
+                    board.updateEmoticons();
                     drawIt(canvas);
-                    control();
                 }
                 surfaceHolder.unlockCanvasAndPost(canvas);
             }
@@ -120,14 +118,6 @@ public class GameView extends SurfaceView implements Runnable {
                 }
                 canvas.drawBitmap(e.getBitmap(), e.getScreenPositionX(), e.getScreenPositionY(), null);
             }
-        }
-    }
-
-    public void control() {
-        try {
-            Thread.sleep(ONE_MILLISECOND);
-        } catch (InterruptedException e) {
-
         }
     }
 
