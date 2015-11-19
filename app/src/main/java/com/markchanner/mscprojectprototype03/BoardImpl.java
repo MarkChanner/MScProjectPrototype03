@@ -199,6 +199,8 @@ public class BoardImpl implements Board {
 
     public void modifyBoard(GameView view, ArrayList<LinkedList<Emoticon>> matchingX, ArrayList<LinkedList<Emoticon>> matchingY) {
         do {
+            highlightMatches(matchingX);
+            highlightMatches(matchingY);
             giveReward(view, matchingX, matchingY);
             removeFromBoard(matchingX);
             removeFromBoard(matchingY);
@@ -216,8 +218,6 @@ public class BoardImpl implements Board {
             String matchingTypeY = matchingY.get(0).getFirst().getEmoticonType();
             soundManager.playSound(matchingTypeY);
         }
-        highlightMatches(matchingX);
-        highlightMatches(matchingY);
         view.control(ONE_SECOND);
     }
 
@@ -278,7 +278,7 @@ public class BoardImpl implements Board {
         for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
             for (int x = ROW_START; x < X_MAX; x++) {
                 while (emoticons[x][y].isLowering()) {
-                    monitor.waitDrops(); /** DON'T FORGET ABOUT THIS ONE! */
+                    monitor.waitDrops();
                 }
             }
         }
