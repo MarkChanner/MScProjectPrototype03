@@ -2,26 +2,49 @@ package com.markchanner.mscprojectprototype03;
 
 public final class Monitor {
 
-    private final Object obj = new Object();
-    private boolean locked = true;
+    private final Object swapsObj = new Object();
+    private volatile boolean swapsLocked = true;
 
-    public void doWait() {
-        synchronized (obj) {
-            while (locked) {
+    private final Object dropsObj = new Object();
+    private volatile boolean dropsLocked = true;
+
+    public void waitSwaps() {
+        synchronized (swapsObj) {
+            while (swapsLocked) {
                 try {
-                    obj.wait();
+                    swapsObj.wait();
                 } catch (InterruptedException e) {
 
                 }
             }
-            locked = true;
+            swapsLocked = true;
         }
     }
 
-    public void doNotify() {
-        synchronized (obj) {
-            locked = false;
-            obj.notify();
+    public void notifySwaps() {
+        synchronized (swapsObj) {
+            swapsLocked = false;
+            swapsObj.notify();
+        }
+    }
+
+    public void waitDrops() {
+        synchronized (dropsObj) {
+            while (dropsLocked) {
+                try {
+                    dropsObj.wait();
+                } catch (InterruptedException e) {
+
+                }
+            }
+            dropsLocked = true;
+        }
+    }
+
+    public void notifyDrops() {
+        synchronized (dropsObj) {
+            dropsLocked = false;
+            dropsObj.notify();
         }
     }
 }
