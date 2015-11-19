@@ -23,7 +23,7 @@ public class BoardImpl implements Board {
     public static final String EMPTY = "EMPTY";
     public static final String INVALID_MOVE = "INVALID_MOVE";
     public static final int ONE_SECOND = 1000;
-    private final Monitor monitor = new Monitor();
+    private final Monitor monitor;
 
     private SoundManager soundManager;
     private int emoticonWidth;
@@ -33,7 +33,8 @@ public class BoardImpl implements Board {
     private final Object lock = new Object();
 
 
-    public BoardImpl(Context context, int emoticonWidth, int emoticonHeight) {
+    public BoardImpl(Context context, Monitor monitor, int emoticonWidth, int emoticonHeight) {
+        this.monitor = monitor;
         soundManager = new SoundManager();
         soundManager.loadSound(context);
         this.emoticonWidth = emoticonWidth;
