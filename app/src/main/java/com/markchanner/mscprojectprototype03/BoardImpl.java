@@ -30,6 +30,7 @@ public class BoardImpl implements Board {
     private int emoticonHeight;
     private Emoticon[][] emoticons;
     private BoardPopulator populator;
+    private final Object lock = new Object();
 
 
     public BoardImpl(Context context, int emoticonWidth, int emoticonHeight) {
@@ -43,18 +44,20 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public synchronized void updateEmoticons() {
-        //boolean emoticonsActive = false;
-        for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
-            for (int x = ROW_START; x < X_MAX; x++) {
-              //  if (emoticons[x][y].isLowering()) {
-                //    emoticonsActive = true;
-                    emoticons[x][y].update();
-              //  }
-            //}
-        }
-        //if (!emoticonsActive) {
-          //  monitor.doNotify();
+    public void updateEmoticons() {
+        synchronized (lock) {
+            boolean emoticonsActive = false;
+            for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
+                for (int x = ROW_START; x < X_MAX; x++) {
+                    if (emoticons[x][y].isLowering()) {
+                        emoticonsActive = true;
+                        emoticons[x][y].update();
+                    }
+                }
+            }
+            if (!emoticonsActive) {
+                lock.notifyAll();
+            }
         }
     }
 
@@ -282,14 +285,15 @@ public class BoardImpl implements Board {
     }
 
     private void waitForAnimationToFinish() {
-        boolean waiting = true;
-        while (waiting) {
-            waiting = false;
+        synchronized (lock) {
             for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
                 for (int x = ROW_START; x < X_MAX; x++) {
                     if (emoticons[x][y].isLowering()) {
-                        waiting = true;
-                        paws(10);
+                        try {
+                            lock.wait();
+                        } catch (InterruptedException e) {
+
+                        }
                     }
                 }
             }
