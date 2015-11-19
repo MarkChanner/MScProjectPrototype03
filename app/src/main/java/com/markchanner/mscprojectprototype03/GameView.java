@@ -91,7 +91,8 @@ public class GameView extends SurfaceView implements Runnable {
         while (running) {
             if (surfaceHolder.getSurface().isValid()) {
                 canvas = surfaceHolder.lockCanvas();
-                board.updateEmoticons();
+                board.updateSwaps();
+                board.updateDrops();
                 drawIt(canvas);
                 surfaceHolder.unlockCanvasAndPost(canvas);
             }
