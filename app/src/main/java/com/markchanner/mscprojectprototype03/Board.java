@@ -5,7 +5,7 @@ package com.markchanner.mscprojectprototype03;
  */
 public interface Board {
 
-    void updateEmoticonMovements();
+    void updateEmoticons();
 
     void processSelections(GameView view, Selection selections);
 
