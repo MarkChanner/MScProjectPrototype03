@@ -15,15 +15,15 @@ public abstract class AbstractEmoticon implements Emoticon {
     private int emoHeight;
     private Bitmap bitmap;
     private String emoticonType;
-
     private int screenPositionX;
     private int screenPositionY;
-    private int pixelMovement; // consider making this a constructor argument
-    volatile boolean lowerEmoticon = false;
-    volatile boolean swapUp = false;
-    volatile boolean swapDown = false;
-    volatile boolean swapRight = false;
-    volatile boolean swapLeft = false;
+    private int pixelMovement;
+
+    volatile boolean lowering = false;
+    volatile boolean swappingUp = false;
+    volatile boolean swappingDown = false;
+    volatile boolean swappingRight = false;
+    volatile boolean swappingLeft = false;
     volatile boolean isPartOfMatch = false;
 
     public AbstractEmoticon(int arrayX, int arrayY, int emoWidth, int emoHeight, Bitmap bitmap, String emoticonType, int offScreenStartPositionY) {
@@ -33,26 +33,33 @@ public abstract class AbstractEmoticon implements Emoticon {
         this.emoHeight = emoHeight;
         this.bitmap = bitmap;
         this.emoticonType = emoticonType;
-
-        pixelMovement = 32;
+        pixelMovement = 16;
         screenPositionX = (arrayX * emoWidth);
         screenPositionY = (offScreenStartPositionY * emoHeight);
-        lowerEmoticon = true;
+        lowering = true;
     }
 
     @Override
     public void update() {
-        if (lowerEmoticonActivated()) {
+        if (lowering) {
             lowerEmoticon();
-        } else if (swapUpActivated()) {
+        } else if (swappingUp) {
             swapUp();
-        } else if (swapDownActivated()) {
+        } else if (swappingDown) {
             swapDown();
-        } else if (swapRightActivated()) {
+        } else if (swappingRight) {
             swapRight();
-        } else if (swapLeftActivated()) {
+        } else if (swappingLeft) {
             swapLeft();
         }
+    }
+
+    @Override
+    public boolean isActive() {
+        if (lowering || swappingUp || swappingDown || swappingLeft || swappingRight) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -66,13 +73,8 @@ public abstract class AbstractEmoticon implements Emoticon {
     }
 
     @Override
-    public void setLowerEmoticon(boolean bool) {
-        lowerEmoticon = bool;
-    }
-
-    @Override
-    public boolean lowerEmoticonActivated() {
-        return lowerEmoticon;
+    public void setLowering(boolean bool) {
+        lowering = bool;
     }
 
     @Override
@@ -84,18 +86,13 @@ public abstract class AbstractEmoticon implements Emoticon {
         }
         screenPositionY += pixelRate;
         if (screenPositionY >= newPosition) {
-            lowerEmoticon = false;
+            lowering = false;
         }
     }
 
     @Override
-    public void setSwapUp(boolean bool) {
-        swapUp = bool;
-    }
-
-    @Override
-    public boolean swapUpActivated() {
-        return swapUp;
+    public void setSwappingUp(boolean bool) {
+        swappingUp = bool;
     }
 
     @Override
@@ -106,17 +103,12 @@ public abstract class AbstractEmoticon implements Emoticon {
             pixelRate /= DIVISOR;
         }
         screenPositionY -= pixelRate;
-        if (screenPositionY <= newPosition) swapUp = false;
+        if (screenPositionY <= newPosition) swappingUp = false;
     }
 
     @Override
-    public void setSwapDown(boolean bool) {
-        swapDown = bool;
-    }
-
-    @Override
-    public boolean swapDownActivated() {
-        return swapDown;
+    public void setSwappingDown(boolean bool) {
+        swappingDown = bool;
     }
 
     @Override
@@ -127,17 +119,14 @@ public abstract class AbstractEmoticon implements Emoticon {
             pixelRate /= DIVISOR;
         }
         screenPositionY += pixelRate;
-        if (screenPositionY >= newPosition) swapDown = false;
+        if (screenPositionY >= newPosition) {
+            swappingDown = false;
+        }
     }
 
     @Override
-    public void setSwapRight(boolean bool) {
-        swapRight = bool;
-    }
-
-    @Override
-    public boolean swapRightActivated() {
-        return swapRight;
+    public void setSwappingRight(boolean bool) {
+        swappingRight = bool;
     }
 
     @Override
@@ -148,17 +137,12 @@ public abstract class AbstractEmoticon implements Emoticon {
             pixelRate /= DIVISOR;
         }
         screenPositionX += pixelRate;
-        if (screenPositionX >= newPosition) swapRight = false;
+        if (screenPositionX >= newPosition) swappingRight = false;
     }
 
     @Override
-    public void setSwapLeft(boolean bool) {
-        swapLeft = bool;
-    }
-
-    @Override
-    public boolean swapLeftActivated() {
-        return swapLeft;
+    public void setSwappingLeft(boolean bool) {
+        swappingLeft = bool;
     }
 
     @Override
@@ -169,7 +153,7 @@ public abstract class AbstractEmoticon implements Emoticon {
             pixelRate /= DIVISOR;
         }
         screenPositionX -= pixelRate;
-        if (screenPositionX <= newPosition) swapLeft = false;
+        if (screenPositionX <= newPosition) swappingLeft = false;
     }
 
     @Override
@@ -213,7 +197,7 @@ public abstract class AbstractEmoticon implements Emoticon {
     }
 
     @Override
-    public String getType() {
+    public String getEmoticonType() {
         return emoticonType;
     }
 }

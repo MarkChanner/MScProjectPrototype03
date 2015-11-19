@@ -7,39 +7,31 @@ import android.graphics.Bitmap;
  */
 public interface Emoticon {
 
+    boolean isActive();
+
     void update();
 
     void setIsPartOfMatch(boolean bool);
 
     boolean isPartOfMatch();
 
-    void setLowerEmoticon(boolean bool);
-
-    boolean lowerEmoticonActivated();
+    void setLowering(boolean bool);
 
     void lowerEmoticon();
 
-    void setSwapUp(boolean swapUp);
-
-    boolean swapUpActivated();
+    void setSwappingUp(boolean swapUp);
 
     void swapUp();
 
-    void setSwapDown(boolean swapDown);
-
-    boolean swapDownActivated();
+    void setSwappingDown(boolean swapDown);
 
     void swapDown();
 
-    void setSwapRight(boolean swapRight);
-
-    boolean swapRightActivated();
+    void setSwappingRight(boolean swapRight);
 
     void swapRight();
 
-    void setSwapLeft(boolean swapLeft);
-
-    boolean swapLeftActivated();
+    void setSwappingLeft(boolean swapLeft);
 
     void swapLeft();
 
@@ -59,7 +51,7 @@ public interface Emoticon {
 
     Bitmap getBitmap();
 
-    String getType();
+    String getEmoticonType();
 
 }
 
