@@ -242,6 +242,7 @@ public class BoardImpl implements Board {
     }
 
     public void lowerEmoticons() {
+
         int offScreenStartPosition;
         int runnerY;
 
@@ -266,24 +267,18 @@ public class BoardImpl implements Board {
                         emoticons[x][y] = populator.generateEmoticon(x, y, emoticonWidth, emoticonHeight, offScreenStartPosition);
                         offScreenStartPosition--;
                     }
+                    emoticons[x][y].setLowering(true);
                 }
             }
         }
-        //monitor.doWait();
         waitForAnimationToFinish();
     }
 
     private void waitForAnimationToFinish() {
-        synchronized (lock) {
-            for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
-                for (int x = ROW_START; x < X_MAX; x++) {
-                    if (emoticons[x][y].isLowering()) {
-                        try {
-                            lock.wait();
-                        } catch (InterruptedException e) {
-
-                        }
-                    }
+        for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
+            for (int x = ROW_START; x < X_MAX; x++) {
+                while (emoticons[x][y].isLowering()) {
+                    monitor.waitDrops(); /** DON'T FORGET ABOUT THIS ONE! */
                 }
             }
         }
