@@ -201,7 +201,7 @@ public class BoardImpl implements Board {
         do {
             highlightMatches(matchingX);
             highlightMatches(matchingY);
-            giveReward(view, matchingX, matchingY);
+            playAudio(view, matchingX, matchingY);
             removeFromBoard(matchingX);
             removeFromBoard(matchingY);
             lowerEmoticons();
@@ -210,7 +210,7 @@ public class BoardImpl implements Board {
         } while (matchesFound(matchingX, matchingY));
     }
 
-    public void giveReward(GameView view, ArrayList<LinkedList<Emoticon>> matchingX, ArrayList<LinkedList<Emoticon>> matchingY) {
+    public void playAudio(GameView view, ArrayList<LinkedList<Emoticon>> matchingX, ArrayList<LinkedList<Emoticon>> matchingY) {
         if (!(matchingX.isEmpty())) {
             String matchingTypeX = matchingX.get(0).getFirst().getEmoticonType();
             soundManager.playSound(matchingTypeX);
