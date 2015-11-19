@@ -81,34 +81,40 @@ public class BoardImpl implements Board {
 
     public void swapSelectedEmoticons(int[] sel1, int[] sel2) {
 
-        Emoticon tempEmoticon1 = emoticons[sel1[X]][sel1[Y]];
+        int emo01X = emoticons[sel1[X]][sel1[Y]].getArrayX();
+        int emo01Y = emoticons[sel1[X]][sel1[Y]].getArrayY();
+        Emoticon newEmoticon2 = emoticons[sel1[X]][sel1[Y]];
+
+        int emo02X = emoticons[sel2[X]][sel2[Y]].getArrayX();
+        int emo02Y = emoticons[sel2[X]][sel2[Y]].getArrayY();
+
         emoticons[sel1[X]][sel1[Y]] = emoticons[sel2[X]][sel2[Y]];
-        emoticons[sel2[X]][sel2[Y]] = tempEmoticon1;
+        emoticons[sel1[X]][sel1[Y]].setArrayX(emo01X);
+        emoticons[sel1[X]][sel1[Y]].setArrayY(emo01Y);
 
-        refreshEmoCoordinates();
+        emoticons[sel2[X]][sel2[Y]] = newEmoticon2;
+        emoticons[sel2[X]][sel2[Y]].setArrayX(emo02X);
+        emoticons[sel2[X]][sel2[Y]].setArrayY(emo02Y);
 
+        // values now swapped, now need to move screen position to reflect
         Emoticon e1 = emoticons[sel1[X]][sel1[Y]];
         Emoticon e2 = emoticons[sel2[X]][sel2[Y]];
-        int emo01X = e1.getArrayX();
-        int emo01Y = e1.getArrayY();
-        int emo02X = e2.getArrayX();
-        int emo02Y = e2.getArrayY();
 
-        if (emo01X == emo02X) {
-            if (emo01Y < emo02Y) {
+        if (e1.getArrayX() == e2.getArrayX()) {
+            if (e1.getArrayY() < e2.getArrayY()) {
                 e1.setSwappingUp(true);
                 e2.setSwappingDown(true);
-            } else if (emo01Y > emo02Y) {
-                e1.setSwappingDown(true);
+            } else {
                 e2.setSwappingUp(true);
+                e1.setSwappingDown(true);
             }
-        } else if (emo01Y == emo02Y) {
-            if (emo01X < emo02X) {
+        } else if (e1.getArrayY() == e2.getArrayY()) {
+            if (e1.getArrayX() < e2.getArrayX()) {
                 e1.setSwappingLeft(true);
                 e2.setSwappingRight(true);
-            } else if (emo01X > emo02X) {
-                e1.setSwappingRight(true);
+            } else {
                 e2.setSwappingLeft(true);
+                e1.setSwappingRight(true);
             }
         }
         while ((e1.isSwapping() || e2.isSwapping())) {
@@ -127,15 +133,6 @@ public class BoardImpl implements Board {
 
     public void swapBack(int[] sel1, int[] sel2) {
         swapSelectedEmoticons(sel1, sel2);
-    }
-
-    private void refreshEmoCoordinates() {
-        for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
-            for (int x = ROW_START; x < X_MAX; x++) {
-                emoticons[x][y].setArrayX(x);
-                emoticons[x][y].setArrayY(y);
-            }
-        }
     }
 
     public ArrayList<LinkedList<Emoticon>> findMatchingColumns() {
