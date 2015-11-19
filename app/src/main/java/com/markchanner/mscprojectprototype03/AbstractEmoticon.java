@@ -56,7 +56,7 @@ public abstract class AbstractEmoticon implements Emoticon {
 
     @Override
     public boolean isActive() {
-        if (lowering || swappingUp || swappingDown || swappingLeft || swappingRight) {
+        if (lowering || swappingUp || swappingDown || swappingLeft || swappingRight || isPartOfMatch) {
             return true;
         }
         return false;

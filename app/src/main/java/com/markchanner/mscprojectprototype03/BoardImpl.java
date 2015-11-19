@@ -43,7 +43,7 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public void updateEmoticons() {
+    public synchronized void updateEmoticons() {
         boolean emoticonsActive = false;
         for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
             for (int x = ROW_START; x < X_MAX; x++) {
@@ -108,7 +108,11 @@ public class BoardImpl implements Board {
                 e2.setSwappingLeft(true);
             }
         }
-        monitor.doWait();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+
+        }
     }
 
     public void swapBack(int[] sel1, int[] sel2) {
@@ -266,6 +270,7 @@ public class BoardImpl implements Board {
                 }
             }
         }
+        monitor.doWait();
     }
 
     @Override
