@@ -9,9 +9,11 @@ public interface Emoticon {
 
     boolean isSwapping();
 
-    void update();
+    void updateSwapping();
 
     boolean isLowering();
+
+    void updateLowering();
 
     void setIsPartOfMatch(boolean bool);
 

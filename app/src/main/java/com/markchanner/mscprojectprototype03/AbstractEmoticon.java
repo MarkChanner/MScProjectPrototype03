@@ -40,10 +40,23 @@ public abstract class AbstractEmoticon implements Emoticon {
     }
 
     @Override
-    public void update() {
-        if (lowering) {
-            lowerEmoticon();
-        } else if (swappingUp) {
+    public boolean isSwapping() {
+        if (swappingUp) {
+            return true;
+        } else if (swappingDown) {
+            return true;
+        } else if (swappingLeft) {
+            return true;
+        } else if (swappingRight) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void updateSwapping() {
+        if (swappingUp) {
             swapUp();
         } else if (swappingDown) {
             swapDown();
@@ -55,16 +68,15 @@ public abstract class AbstractEmoticon implements Emoticon {
     }
 
     @Override
-    public boolean isSwapping() {
-        if (swappingUp || swappingDown || swappingLeft || swappingRight) {
-            return true;
-        }
-        return false;
+    public boolean isLowering() {
+        return lowering;
     }
 
     @Override
-    public boolean isLowering() {
-        return lowering;
+    public void updateLowering() {
+        if (lowering) {
+            lowerEmoticon();
+        }
     }
 
     @Override
@@ -108,7 +120,9 @@ public abstract class AbstractEmoticon implements Emoticon {
             pixelRate /= DIVISOR;
         }
         screenPositionY -= pixelRate;
-        if (screenPositionY <= newPosition) swappingUp = false;
+        if (screenPositionY <= newPosition) {
+            swappingUp = false;
+        }
     }
 
     @Override
@@ -142,7 +156,9 @@ public abstract class AbstractEmoticon implements Emoticon {
             pixelRate /= DIVISOR;
         }
         screenPositionX += pixelRate;
-        if (screenPositionX >= newPosition) swappingRight = false;
+        if (screenPositionX >= newPosition) {
+            swappingRight = false;
+        }
     }
 
     @Override
@@ -158,7 +174,9 @@ public abstract class AbstractEmoticon implements Emoticon {
             pixelRate /= DIVISOR;
         }
         screenPositionX -= pixelRate;
-        if (screenPositionX <= newPosition) swappingLeft = false;
+        if (screenPositionX <= newPosition) {
+            swappingLeft = false;
+        }
     }
 
     @Override
