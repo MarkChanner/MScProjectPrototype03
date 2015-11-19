@@ -44,21 +44,33 @@ public class BoardImpl implements Board {
         populator.populateBoard(context, this, emoticonWidth, emoticonHeight);
     }
 
-    @Override
-    public void updateEmoticons() {
-        synchronized (lock) {
-            boolean emoticonsActive = false;
-            for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
-                for (int x = ROW_START; x < X_MAX; x++) {
-                    if (emoticons[x][y].isLowering()) {
-                        emoticonsActive = true;
-                        emoticons[x][y].update();
-                    }
+    public void updateSwaps() {
+        boolean emoticonsSwapping = false;
+        for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
+            for (int x = ROW_START; x < X_MAX; x++) {
+                if (emoticons[x][y].isSwapping()) {
+                    emoticonsSwapping = true;
+                    emoticons[x][y].updateSwapping();
                 }
             }
-            if (!emoticonsActive) {
-                lock.notifyAll();
+        }
+        if (!emoticonsSwapping) {
+            monitor.notifySwaps();
+        }
+    }
+
+    public void updateDrops() {
+        boolean emoticonsLowering = false;
+        for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
+            for (int x = ROW_START; x < X_MAX; x++) {
+                if (emoticons[x][y].isLowering()) {
+                    emoticonsLowering = true;
+                    emoticons[x][y].updateLowering();
+                }
             }
+        }
+        if (!emoticonsLowering) {
+            monitor.notifyDrops();
         }
     }
 
