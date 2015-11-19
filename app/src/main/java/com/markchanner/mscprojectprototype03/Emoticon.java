@@ -7,9 +7,11 @@ import android.graphics.Bitmap;
  */
 public interface Emoticon {
 
-    boolean isActive();
+    boolean isSwapping();
 
     void update();
+
+    boolean isLowering();
 
     void setIsPartOfMatch(boolean bool);
 

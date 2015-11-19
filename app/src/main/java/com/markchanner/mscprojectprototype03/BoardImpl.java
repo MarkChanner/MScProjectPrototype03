@@ -44,17 +44,17 @@ public class BoardImpl implements Board {
 
     @Override
     public synchronized void updateEmoticons() {
-        boolean emoticonsActive = false;
+        //boolean emoticonsActive = false;
         for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
             for (int x = ROW_START; x < X_MAX; x++) {
-                if (emoticons[x][y].isActive()) {
-                    emoticonsActive = true;
+              //  if (emoticons[x][y].isLowering()) {
+                //    emoticonsActive = true;
                     emoticons[x][y].update();
-                }
-            }
+              //  }
+            //}
         }
-        if (!emoticonsActive) {
-            monitor.doNotify();
+        //if (!emoticonsActive) {
+          //  monitor.doNotify();
         }
     }
 
@@ -108,8 +108,15 @@ public class BoardImpl implements Board {
                 e2.setSwappingLeft(true);
             }
         }
+        while ((e1.isSwapping() || e2.isSwapping())) {
+            paws(10);
+        }
+
+    }
+
+    public void paws(int ms) {
         try {
-            Thread.sleep(500);
+            Thread.sleep(ms);
         } catch (InterruptedException e) {
 
         }
@@ -270,7 +277,23 @@ public class BoardImpl implements Board {
                 }
             }
         }
-        monitor.doWait();
+        //monitor.doWait();
+        waitForAnimationToFinish();
+    }
+
+    private void waitForAnimationToFinish() {
+        boolean waiting = true;
+        while (waiting) {
+            waiting = false;
+            for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
+                for (int x = ROW_START; x < X_MAX; x++) {
+                    if (emoticons[x][y].isLowering()) {
+                        waiting = true;
+                        paws(10);
+                    }
+                }
+            }
+        }
     }
 
     @Override
