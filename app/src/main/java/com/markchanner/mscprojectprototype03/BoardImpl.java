@@ -118,17 +118,9 @@ public class BoardImpl implements Board {
             }
         }
         while ((e1.isSwapping() || e2.isSwapping())) {
-            paws(10);
+            monitor.waitSwaps();
         }
 
-    }
-
-    public void paws(int ms) {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException e) {
-
-        }
     }
 
     public void swapBack(int[] sel1, int[] sel2) {
