@@ -47,11 +47,11 @@ public class BoardPopulatorImpl implements BoardPopulator {
                     newEmoticon = generateEmoticon(x, y, emoticonWidth, emoticonHeight, ((y - Y_MAX) - dropGap));
 
                 } while ((y >= 2 &&
-                        (newEmoticon.getType().equals(emoticons[x][y - 1].getType()) &&
-                                newEmoticon.getType().equals(emoticons[x][y - 2].getType()))) ||
+                        (newEmoticon.getEmoticonType().equals(emoticons[x][y - 1].getEmoticonType()) &&
+                                newEmoticon.getEmoticonType().equals(emoticons[x][y - 2].getEmoticonType()))) ||
                         (x >= 2 &&
-                                (newEmoticon.getType().equals(emoticons[x - 1][y].getType()) &&
-                                        newEmoticon.getType().equals(emoticons[x - 2][y].getType()))));
+                                (newEmoticon.getEmoticonType().equals(emoticons[x - 1][y].getEmoticonType()) &&
+                                        newEmoticon.getEmoticonType().equals(emoticons[x - 2][y].getEmoticonType()))));
 
                 dropGap--;
                 emoticons[x][y] = newEmoticon;
