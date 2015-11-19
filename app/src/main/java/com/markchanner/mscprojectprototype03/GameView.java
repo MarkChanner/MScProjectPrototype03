@@ -32,6 +32,8 @@ public class GameView extends SurfaceView implements Runnable {
     private Board board;
     private Selection selections;
     private Thread gameViewThread = null;
+    private final Monitor monitor = new Monitor();
+    private Context context;
 
     volatile boolean running = false;
 
@@ -73,7 +75,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void startGame(Context context) {
-        board = new BoardImpl(context, emoWidth, emoHeight);
+        board = new BoardImpl(context, monitor, emoWidth, emoHeight);
         selections = new SelectionImpl();
     }
 
