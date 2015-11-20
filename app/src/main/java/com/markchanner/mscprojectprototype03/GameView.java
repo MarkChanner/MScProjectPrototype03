@@ -159,6 +159,7 @@ public class GameView extends SurfaceView implements Runnable {
         int screenY = (int) event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                Log.d(TAG, "in onTouchEvent(MotionEvent)**********************************");
                 storeSelection(screenX / emoWidth, screenY / emoHeight);
                 break;
         }

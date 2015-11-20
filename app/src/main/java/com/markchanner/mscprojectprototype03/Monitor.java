@@ -14,6 +14,7 @@ public final class Monitor {
         Log.d(TAG, "in waitSwaps()");
         synchronized (swapsObj) {
             while (swapsLocked) {
+                Log.d(TAG, "in waitSwaps()");
                 try {
                     swapsObj.wait();
                 } catch (InterruptedException e) {
