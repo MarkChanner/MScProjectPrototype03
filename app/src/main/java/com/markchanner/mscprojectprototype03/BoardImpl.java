@@ -30,8 +30,6 @@ public class BoardImpl implements Board {
     private int emoticonHeight;
     private Emoticon[][] emoticons;
     private BoardPopulator populator;
-    private final Object lock = new Object();
-
 
     public BoardImpl(Context context, Monitor monitor, int emoticonWidth, int emoticonHeight) {
         this.monitor = monitor;
