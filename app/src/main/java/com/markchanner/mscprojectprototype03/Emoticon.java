@@ -11,17 +11,17 @@ public interface Emoticon {
 
     void updateSwapping();
 
-    boolean isLowering();
+    boolean isDropping();
 
-    void updateLowering();
+    void updateDropping();
 
     void setIsPartOfMatch(boolean bool);
 
     boolean isPartOfMatch();
 
-    void setLowering(boolean bool);
+    void setDropping(boolean bool);
 
-    void lowerEmoticon();
+    void dropEmoticon();
 
     void setSwappingUp(boolean swapUp);
 

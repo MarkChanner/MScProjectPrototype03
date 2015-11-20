@@ -28,8 +28,8 @@ public class BoardImpl implements Board {
 
     private volatile boolean animatingSwap = false;
     private volatile boolean animatingDrop = false;
-    private final Object swapObj = new Object();
-    private final Object dropObj = new Object();
+    private final Object swapLock = new Object();
+    private final Object dropLock = new Object();
 
     private SoundManager soundManager;
     private int emoticonWidth;
@@ -38,13 +38,13 @@ public class BoardImpl implements Board {
     private BoardPopulator populator;
 
     public BoardImpl(Context context, int emoticonWidth, int emoticonHeight) {
-        soundManager = new SoundManager();
-        soundManager.loadSound(context);
+        this.soundManager = new SoundManager();
+        this.soundManager.loadSound(context);
         this.emoticonWidth = emoticonWidth;
         this.emoticonHeight = emoticonHeight;
-        emoticons = new AbstractEmoticon[X_MAX][Y_MAX];
-        populator = new BoardPopulatorImpl();
-        populator.populateBoard(context, this, emoticonWidth, emoticonHeight);
+        this.emoticons = new AbstractEmoticon[X_MAX][Y_MAX];
+        this.populator = new BoardPopulatorImpl();
+        this.populator.populateBoard(context, this, emoticonWidth, emoticonHeight);
     }
 
     @Override
@@ -60,10 +60,10 @@ public class BoardImpl implements Board {
             }
         }
         if (!emoticonsSwapping) {
-            synchronized (swapObj) {
+            synchronized (swapLock) {
                 if (animatingSwap) {
                     animatingSwap = false;
-                    swapObj.notifyAll();
+                    swapLock.notifyAll();
                 }
             }
         }
@@ -72,20 +72,20 @@ public class BoardImpl implements Board {
     @Override
     public void updateDrops() {
         Log.d(TAG, "FROM RUN(): in updateDrops");
-        boolean emoticonsLowering = false;
+        boolean emoticonsDropping = false;
         for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
             for (int x = ROW_START; x < X_MAX; x++) {
-                if (emoticons[x][y].isLowering()) {
-                    emoticonsLowering = true;
-                    emoticons[x][y].updateLowering();
+                if (emoticons[x][y].isDropping()) {
+                    emoticonsDropping = true;
+                    emoticons[x][y].updateDropping();
                 }
             }
         }
-        if (!emoticonsLowering) {
-            synchronized (dropObj) {
+        if (!emoticonsDropping) {
+            synchronized (dropLock) {
                 if (animatingDrop) {
                     animatingDrop = false;
-                    dropObj.notifyAll();
+                    dropLock.notifyAll();
                 }
             }
         }
@@ -148,17 +148,17 @@ public class BoardImpl implements Board {
                 e1.setSwappingRight(true);
             }
         }
-        lockSwap();
-        Log.d(TAG, "Returned from lockSwap()");
+        waitForSwapAnimationToFinish();
+        Log.d(TAG, "Returned from waitForSwapAnimationToFinish()");
     }
 
-    private void lockSwap() {
-        Log.d(TAG, "in lockSwap()");
-        synchronized (swapObj) {
+    private void waitForSwapAnimationToFinish() {
+        Log.d(TAG, "in waitForSwapAnimationToFinish()");
+        synchronized (swapLock) {
             animatingSwap = true;
             while (animatingSwap) {
                 try {
-                    swapObj.wait();
+                    swapLock.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -245,7 +245,6 @@ public class BoardImpl implements Board {
     }
 
     private void modifyBoard(GameView view, ArrayList<LinkedList<Emoticon>> matchingX, ArrayList<LinkedList<Emoticon>> matchingY) {
-        Log.d(TAG, "in modifyBoard method");
         do {
             Log.d(TAG, "entered do/while loop in modifyBoard method");
             highlightMatches(matchingX);
@@ -253,7 +252,7 @@ public class BoardImpl implements Board {
             playAudio(view, matchingX, matchingY);
             removeFromBoard(matchingX);
             removeFromBoard(matchingY);
-            lowerEmoticons();
+            dropEmoticons();
             matchingX = findMatchingColumns();
             matchingY = findMatchingRows();
         } while (matchesFound(matchingX, matchingY));
@@ -291,8 +290,8 @@ public class BoardImpl implements Board {
         }
     }
 
-    private void lowerEmoticons() {
-        Log.d(TAG, "in lowerEmoticons()");
+    private void dropEmoticons() {
+        Log.d(TAG, "in dropEmoticons()");
         int offScreenStartPosition;
         int runnerY;
 
@@ -311,7 +310,7 @@ public class BoardImpl implements Board {
                         int tempY = emoticons[x][y].getArrayY();
                         emoticons[x][y] = emoticons[x][runnerY];
                         emoticons[x][y].setArrayY(tempY);
-                        emoticons[x][y].setLowering(true);
+                        emoticons[x][y].setDropping(true);
                         emoticons[x][runnerY] = populator.getEmptyEmoticon(x, runnerY, emoticonWidth, emoticonHeight);
                     } else {
                         emoticons[x][y] = populator.generateEmoticon(x, y, emoticonWidth, emoticonHeight, offScreenStartPosition);
@@ -320,17 +319,17 @@ public class BoardImpl implements Board {
                 }
             }
         }
-        lockDrop();
-        Log.d(TAG, "Returned from lockDrop()");
+        waitForDropAnimationToComplete();
+        Log.d(TAG, "Returned from waitForDropAnimationToComplete()");
     }
 
-    private void lockDrop() {
-        Log.d(TAG, "in lockDrop()");
-        synchronized (dropObj) {
+    private void waitForDropAnimationToComplete() {
+        Log.d(TAG, "in waitForDropAnimationToComplete()");
+        synchronized (dropLock) {
             animatingDrop = true;
             while (animatingDrop) {
                 try {
-                    dropObj.wait();
+                    dropLock.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

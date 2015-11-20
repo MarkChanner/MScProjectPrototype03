@@ -68,14 +68,14 @@ public abstract class AbstractEmoticon implements Emoticon {
     }
 
     @Override
-    public boolean isLowering() {
+    public boolean isDropping() {
         return lowering;
     }
 
     @Override
-    public void updateLowering() {
+    public void updateDropping() {
         if (lowering) {
-            lowerEmoticon();
+            dropEmoticon();
         }
     }
 
@@ -90,12 +90,12 @@ public abstract class AbstractEmoticon implements Emoticon {
     }
 
     @Override
-    public void setLowering(boolean bool) {
+    public void setDropping(boolean bool) {
         lowering = bool;
     }
 
     @Override
-    public void lowerEmoticon() {
+    public void dropEmoticon() {
         int newPosition = (arrayY * emoHeight);
         int pixelRate = pixelMovement;
         while (screenPositionY + pixelRate > newPosition) {
