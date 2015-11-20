@@ -6,6 +6,7 @@ import android.content.res.AssetManager;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -19,13 +20,14 @@ import java.io.IOException;
  */
 public class GameActivity extends Activity {
 
+    private final static String TAG = "GameActivity";
     private MediaPlayer mediaPlayer;
     private GameView gameBoardView;
-    private ScoreBoardView scoreBoardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "called onCreate(Bundle)");
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_game);
@@ -40,6 +42,8 @@ public class GameActivity extends Activity {
             mediaPlayer.setLooping(true);
         } catch (IOException e) {
             mediaPlayer = null;
+            Log.d(TAG, "IOException in onCreate: " + e);
+            e.printStackTrace();
         }
 
         Display display = getWindowManager().getDefaultDisplay();
@@ -61,7 +65,7 @@ public class GameActivity extends Activity {
         int scoreX = (int) (sizeX * 0.2);
         int scoreY = boardY;
 
-        scoreBoardView = new ScoreBoardView(this, scoreX, scoreY);
+        ScoreBoardView scoreBoardView = new ScoreBoardView(this, scoreX, scoreY);
         LinearLayout.LayoutParams scoreParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(scoreX, scoreY));
         layout.addView(scoreBoardView, scoreParams);
 
@@ -74,6 +78,7 @@ public class GameActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "called onResume()");
         if (mediaPlayer != null) {
             mediaPlayer.start();
         }
@@ -83,6 +88,7 @@ public class GameActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d(TAG, "called onPause()");
         if (mediaPlayer != null) {
             mediaPlayer.pause();
             if (isFinishing()) {

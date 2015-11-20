@@ -1,10 +1,13 @@
 package com.markchanner.mscprojectprototype03;
 
+import android.util.Log;
+
 public class SelectionImpl implements Selection {
 
     /**
      * @author Mark Channer for Birkbeck MSc Computer Science project
      */
+    private static final String TAG = "SelectionImpl";
     public static final int X = 0;
     public static final int Y = 1;
     private int[] selection01 = new int[2];
@@ -36,6 +39,7 @@ public class SelectionImpl implements Selection {
 
     @Override
     public void setSelection01(int x, int y) {
+        Log.d(TAG, "in setSelection01");
         selection01[X] = x;
         selection01[Y] = y;
         selection01Made = true;
@@ -48,6 +52,7 @@ public class SelectionImpl implements Selection {
 
     @Override
     public void setSelection02(int x, int y) {
+        Log.d(TAG, "in setSelection02");
         selection02[X] = x;
         selection02[Y] = y;
     }

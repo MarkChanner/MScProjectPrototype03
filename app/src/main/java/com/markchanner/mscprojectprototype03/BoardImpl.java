@@ -2,6 +2,7 @@ package com.markchanner.mscprojectprototype03;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -11,6 +12,8 @@ import java.util.List;
  * @author Mark Channer for Birkbeck MSc Computer Science project
  */
 public class BoardImpl implements Board {
+
+    private static final String TAG = "BoardImpl";
 
     public static final int X = 0;
     public static final int Y = 1;
@@ -23,7 +26,7 @@ public class BoardImpl implements Board {
     public static final String EMPTY = "EMPTY";
     public static final String INVALID_MOVE = "INVALID_MOVE";
     public static final int ONE_SECOND = 1000;
-    private final Monitor monitor;
+    private final Monitor monitor = new Monitor();
 
     private SoundManager soundManager;
     private int emoticonWidth;
@@ -31,8 +34,7 @@ public class BoardImpl implements Board {
     private Emoticon[][] emoticons;
     private BoardPopulator populator;
 
-    public BoardImpl(Context context, Monitor monitor, int emoticonWidth, int emoticonHeight) {
-        this.monitor = monitor;
+    public BoardImpl(Context context, int emoticonWidth, int emoticonHeight) {
         soundManager = new SoundManager();
         soundManager.loadSound(context);
         this.emoticonWidth = emoticonWidth;
@@ -43,6 +45,7 @@ public class BoardImpl implements Board {
     }
 
     public void updateSwaps() {
+        Log.d(TAG, "FROM RUN(): in updateSwaps()");
         boolean emoticonsSwapping = false;
         for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
             for (int x = ROW_START; x < X_MAX; x++) {
@@ -58,6 +61,7 @@ public class BoardImpl implements Board {
     }
 
     public void updateDrops() {
+        Log.d(TAG, "FROM RUN(): in updateDrops");
         boolean emoticonsLowering = false;
         for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
             for (int x = ROW_START; x < X_MAX; x++) {
@@ -74,6 +78,7 @@ public class BoardImpl implements Board {
 
     @Override
     public void processSelections(GameView view, Selection selections) {
+        Log.d(TAG, "in processSelections(GameView, Selection)");
         int[] sel1 = selections.getSelection01();
         int[] sel2 = selections.getSelection02();
         swapSelectedEmoticons(sel1, sel2);
@@ -91,7 +96,7 @@ public class BoardImpl implements Board {
     }
 
     public void swapSelectedEmoticons(int[] sel1, int[] sel2) {
-
+        Log.d(TAG, "in swapSelectedEmoticons(int[] int[])");
         int emo01X = emoticons[sel1[X]][sel1[Y]].getArrayX();
         int emo01Y = emoticons[sel1[X]][sel1[Y]].getArrayY();
         Emoticon newEmoticon2 = emoticons[sel1[X]][sel1[Y]];
@@ -129,16 +134,19 @@ public class BoardImpl implements Board {
             }
         }
         while ((e1.isSwapping() || e2.isSwapping())) {
+            Log.d(TAG, "in loop: calls waitSwaps()");
             monitor.waitSwaps();
         }
 
     }
 
     public void swapBack(int[] sel1, int[] sel2) {
+        Log.d(TAG, "in swapBack(int[] int[])");
         swapSelectedEmoticons(sel1, sel2);
     }
 
     public ArrayList<LinkedList<Emoticon>> findMatchingColumns() {
+        Log.d(TAG, "in findMatchingColumns()");
         LinkedList<Emoticon> consecutiveEmoticons = new LinkedList<>();
         ArrayList<LinkedList<Emoticon>> bigList = new ArrayList<>();
         Emoticon emoticon;
@@ -162,6 +170,7 @@ public class BoardImpl implements Board {
     }
 
     public ArrayList<LinkedList<Emoticon>> findMatchingRows() {
+        Log.d(TAG, "in findMatchingRows()");
         LinkedList<Emoticon> consecutiveEmoticons = new LinkedList<>();
         ArrayList<LinkedList<Emoticon>> bigList = new ArrayList<>();
         Emoticon emoticon;
@@ -205,11 +214,14 @@ public class BoardImpl implements Board {
     }
 
     private boolean matchesFound(ArrayList<LinkedList<Emoticon>> matchingX, ArrayList<LinkedList<Emoticon>> matchingY) {
+        Log.d(TAG, "in matchesFound method");
         return (!(matchingX.isEmpty() && matchingY.isEmpty()));
     }
 
     public void modifyBoard(GameView view, ArrayList<LinkedList<Emoticon>> matchingX, ArrayList<LinkedList<Emoticon>> matchingY) {
+        Log.d(TAG, "in modifyBoard method");
         do {
+            Log.d(TAG, "entered do/while loop in modifyBoard method");
             highlightMatches(matchingX);
             highlightMatches(matchingY);
             playAudio(view, matchingX, matchingY);
@@ -222,6 +234,7 @@ public class BoardImpl implements Board {
     }
 
     public void playAudio(GameView view, ArrayList<LinkedList<Emoticon>> matchingX, ArrayList<LinkedList<Emoticon>> matchingY) {
+        Log.d(TAG, "in PlayAudio method");
         if (!(matchingX.isEmpty())) {
             String matchingTypeX = matchingX.get(0).getFirst().getEmoticonType();
             soundManager.playSound(matchingTypeX);
@@ -253,6 +266,7 @@ public class BoardImpl implements Board {
     }
 
     public void lowerEmoticons() {
+        Log.d(TAG, "in lowerEmoticons()");
 
         int offScreenStartPosition;
         int runnerY;
@@ -282,9 +296,11 @@ public class BoardImpl implements Board {
             }
         }
         waitForAnimationToFinish();
+        Log.d(TAG, "at end of lowerEmoticons, after returning from waitForAnimationToFinish()");
     }
 
     private void waitForAnimationToFinish() {
+        Log.d(TAG, "in waitForAnimationToFinish()");
         for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
             for (int x = ROW_START; x < X_MAX; x++) {
                 while (emoticons[x][y].isLowering()) {

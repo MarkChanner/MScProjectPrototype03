@@ -2,6 +2,7 @@ package com.markchanner.mscprojectprototype03;
 
 import android.graphics.Bitmap;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.SurfaceView;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -16,6 +17,7 @@ import android.view.MotionEvent;
  */
 public class GameView extends SurfaceView implements Runnable {
 
+    private final static String TAG = "GameView";
     public static final int X_MAX = BoardImpl.X_MAX;
     public static final int Y_MAX = BoardImpl.Y_MAX;
     public static final int ZERO = 0;
@@ -32,20 +34,22 @@ public class GameView extends SurfaceView implements Runnable {
     private Board board;
     private Selection selections;
     private Thread gameViewThread = null;
-    private final Monitor monitor = new Monitor();
 
     volatile boolean running = false;
 
     public GameView(Context context, int viewX, int viewY) {
         super(context);
+        Log.d(TAG, "in constructor");
         surfaceHolder = getHolder();
         emoWidth = viewX / X_MAX;
         emoHeight = viewY / Y_MAX;
+        board = new BoardImpl(context, emoWidth, emoHeight);
+        selections = new SelectionImpl();
         prepareCanvas(context, viewX, viewY);
-        startGame(context);
     }
 
     private void prepareCanvas(Context context, int screenX, int screenY) {
+        Log.d(TAG, "in prepareCanvas(Context, int, int)");
         Paint gameBoardColour = new Paint();
         gameBoardColour.setColor(ContextCompat.getColor(context, R.color.gameboard));
 
@@ -71,12 +75,8 @@ public class GameView extends SurfaceView implements Runnable {
         gridCanvas.drawBitmap(gridBitmap, ZERO, ZERO, null);
     }
 
-    private void startGame(Context context) {
-        board = new BoardImpl(context, monitor, emoWidth, emoHeight);
-        selections = new SelectionImpl();
-    }
-
     public void resume() {
+        Log.d(TAG, "in resume()");
         running = true;
         gameViewThread = new Thread(this);
         gameViewThread.start();
@@ -84,6 +84,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     @Override
     public void run() {
+        Log.d(TAG, "in run()");
         Canvas canvas;
         while (running) {
             if (surfaceHolder.getSurface().isValid()) {
@@ -97,6 +98,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void drawIt(Canvas canvas) {
+        Log.d(TAG, "called drawIt");
         canvas.drawBitmap(gridBitmap, ZERO, ZERO, null); // Draws background
         // Highlight the background of a selected Emoticon
         canvas.drawRect(highlightSelectionRect, selectionFill);
@@ -120,6 +122,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void control(int ms) {
+        Log.d(TAG, "called control");
         try {
             Thread.sleep(ms);
         } catch (InterruptedException e) {
@@ -128,6 +131,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void pause() {
+        Log.d(TAG, "called pause");
         running = false;
         while (true) {
             try {
@@ -140,6 +144,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     protected void highlightSelection(int x, int y) {
+        Log.d(TAG, "called startGame");
         highlightSelectionRect.set(x * emoWidth, y * emoHeight, (x * emoWidth) + emoWidth, (y * emoHeight) + emoHeight);
     }
 
@@ -149,6 +154,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        Log.d(TAG, "called onTouchEvent(MotionEvent)");
         int screenX = (int) event.getX();
         int screenY = (int) event.getY();
         switch (event.getAction()) {
