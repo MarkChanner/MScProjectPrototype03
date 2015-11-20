@@ -36,6 +36,7 @@ public abstract class AbstractEmoticon implements Emoticon {
         pixelMovement = 16;
         screenPositionX = (arrayX * emoWidth);
         screenPositionY = (offScreenStartPositionY * emoHeight);
+        lowering = true;
     }
 
     @Override
