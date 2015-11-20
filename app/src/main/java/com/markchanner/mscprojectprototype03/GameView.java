@@ -33,14 +33,9 @@ public class GameView extends SurfaceView implements Runnable {
     private Selection selections;
     private Thread gameViewThread = null;
     private final Monitor monitor = new Monitor();
-    private Context context;
 
     volatile boolean running = false;
 
-    /**
-     * Try to a consistent Bitmap
-     * configuration throughout (like RGB_565)
-     */
     public GameView(Context context, int viewX, int viewY) {
         super(context);
         surfaceHolder = getHolder();
@@ -65,6 +60,7 @@ public class GameView extends SurfaceView implements Runnable {
         Canvas gridCanvas = new Canvas(gridBitmap);
         gridCanvas.drawRect(ZERO, ZERO, screenX, screenY, gameBoardColour);
         gridCanvas.drawRect(ZERO, ZERO, screenX, screenY, gridLineColour);
+
         for (int i = 0; i < X_MAX; i++) {
             gridCanvas.drawLine(i * emoWidth, ZERO, i * emoWidth, screenY, gridLineColour); // Vertical
         }
