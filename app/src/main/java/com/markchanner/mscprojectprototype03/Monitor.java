@@ -14,7 +14,7 @@ public final class Monitor {
                 try {
                     swapsObj.wait();
                 } catch (InterruptedException e) {
-
+                    e.printStackTrace();
                 }
             }
             swapsLocked = true;
@@ -34,7 +34,7 @@ public final class Monitor {
                 try {
                     dropsObj.wait();
                 } catch (InterruptedException e) {
-
+                    e.printStackTrace();
                 }
             }
             dropsLocked = true;

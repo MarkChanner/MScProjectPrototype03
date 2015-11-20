@@ -123,7 +123,7 @@ public class GameView extends SurfaceView implements Runnable {
         try {
             Thread.sleep(ms);
         } catch (InterruptedException e) {
-
+            e.printStackTrace();
         }
     }
 
