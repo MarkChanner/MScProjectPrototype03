@@ -54,7 +54,7 @@ public class GameView extends SurfaceView implements Runnable {
         selectionFill.setColor(context.getResources().getColor(R.color.highlightbackground));
         gridLineColour.setColor(Color.BLACK);
         gridLineColour.setStyle(Paint.Style.STROKE);
-        gridLineColour.setStrokeWidth(5f);
+        gridLineColour.setStrokeWidth(3f);
 
         gridBitmap = Bitmap.createBitmap(screenX, screenY, Bitmap.Config.RGB_565);
         Canvas gridCanvas = new Canvas(gridBitmap);
