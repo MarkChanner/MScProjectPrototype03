@@ -47,6 +47,7 @@ public class BoardImpl implements Board {
         populator.populateBoard(context, this, emoticonWidth, emoticonHeight);
     }
 
+    @Override
     public void updateSwaps() {
         Log.d(TAG, "FROM RUN(): in updateSwaps()");
         boolean emoticonsSwapping = false;
@@ -68,6 +69,7 @@ public class BoardImpl implements Board {
         }
     }
 
+    @Override
     public void updateDrops() {
         Log.d(TAG, "FROM RUN(): in updateDrops");
         boolean emoticonsLowering = false;
