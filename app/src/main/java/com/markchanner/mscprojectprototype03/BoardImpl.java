@@ -1,6 +1,5 @@
 package com.markchanner.mscprojectprototype03;
 
-
 import android.content.Context;
 import android.util.Log;
 
