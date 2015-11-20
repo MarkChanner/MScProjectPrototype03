@@ -1,6 +1,7 @@
 package com.markchanner.mscprojectprototype03;
 
 import android.graphics.Bitmap;
+import android.support.v4.content.ContextCompat;
 import android.view.SurfaceView;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -46,11 +47,12 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void prepareCanvas(Context context, int screenX, int screenY) {
         Paint gameBoardColour = new Paint();
-        selectionFill = new Paint();
-        gridLineColour = new Paint();
+        gameBoardColour.setColor(ContextCompat.getColor(context, R.color.gameboard));
 
-        gameBoardColour.setColor(context.getResources().getColor(R.color.gameboard));
-        selectionFill.setColor(context.getResources().getColor(R.color.highlightbackground));
+        selectionFill = new Paint();
+        selectionFill.setColor(ContextCompat.getColor(context, R.color.highlightbackground));
+
+        gridLineColour = new Paint();
         gridLineColour.setColor(Color.BLACK);
         gridLineColour.setStyle(Paint.Style.STROKE);
         gridLineColour.setStrokeWidth(3f);
