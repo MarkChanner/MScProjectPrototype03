@@ -19,12 +19,12 @@ public abstract class AbstractEmoticon implements Emoticon {
     private int screenPositionY;
     private int pixelMovement;
 
-    volatile boolean lowering = false;
-    volatile boolean swappingUp = false;
-    volatile boolean swappingDown = false;
-    volatile boolean swappingRight = false;
-    volatile boolean swappingLeft = false;
-    volatile boolean isPartOfMatch = false;
+    volatile boolean lowering;
+    volatile boolean swappingUp;
+    volatile boolean swappingDown;
+    volatile boolean swappingRight;
+    volatile boolean swappingLeft;
+    volatile boolean isPartOfMatch;
 
     public AbstractEmoticon(int arrayX, int arrayY, int emoWidth, int emoHeight, Bitmap bitmap, String emoticonType, int offScreenStartPositionY) {
         this.arrayX = arrayX;
