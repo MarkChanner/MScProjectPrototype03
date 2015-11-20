@@ -278,7 +278,6 @@ public class BoardImpl implements Board {
                         emoticons[x][y] = populator.generateEmoticon(x, y, emoticonWidth, emoticonHeight, offScreenStartPosition);
                         offScreenStartPosition--;
                     }
-                    emoticons[x][y].setLowering(true);
                 }
             }
         }
