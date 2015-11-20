@@ -164,12 +164,12 @@ public class BoardImpl implements Board {
         }
     }
 
-    public void swapBack(int[] sel1, int[] sel2) {
+    private void swapBack(int[] sel1, int[] sel2) {
         Log.d(TAG, "in swapBack(int[] int[])");
         swapSelectedEmoticons(sel1, sel2);
     }
 
-    public ArrayList<LinkedList<Emoticon>> findMatchingColumns() {
+    private ArrayList<LinkedList<Emoticon>> findMatchingColumns() {
         Log.d(TAG, "in findMatchingColumns()");
         LinkedList<Emoticon> consecutiveEmoticons = new LinkedList<>();
         ArrayList<LinkedList<Emoticon>> bigList = new ArrayList<>();
@@ -193,7 +193,7 @@ public class BoardImpl implements Board {
         return bigList;
     }
 
-    public ArrayList<LinkedList<Emoticon>> findMatchingRows() {
+    private ArrayList<LinkedList<Emoticon>> findMatchingRows() {
         Log.d(TAG, "in findMatchingRows()");
         LinkedList<Emoticon> consecutiveEmoticons = new LinkedList<>();
         ArrayList<LinkedList<Emoticon>> bigList = new ArrayList<>();
@@ -242,7 +242,7 @@ public class BoardImpl implements Board {
         return (!(matchingX.isEmpty() && matchingY.isEmpty()));
     }
 
-    public void modifyBoard(GameView view, ArrayList<LinkedList<Emoticon>> matchingX, ArrayList<LinkedList<Emoticon>> matchingY) {
+    private void modifyBoard(GameView view, ArrayList<LinkedList<Emoticon>> matchingX, ArrayList<LinkedList<Emoticon>> matchingY) {
         Log.d(TAG, "in modifyBoard method");
         do {
             Log.d(TAG, "entered do/while loop in modifyBoard method");
@@ -257,7 +257,7 @@ public class BoardImpl implements Board {
         } while (matchesFound(matchingX, matchingY));
     }
 
-    public void playAudio(GameView view, ArrayList<LinkedList<Emoticon>> matchingX, ArrayList<LinkedList<Emoticon>> matchingY) {
+    private void playAudio(GameView view, ArrayList<LinkedList<Emoticon>> matchingX, ArrayList<LinkedList<Emoticon>> matchingY) {
         Log.d(TAG, "in PlayAudio method");
         if (!(matchingX.isEmpty())) {
             String matchingTypeX = matchingX.get(0).getFirst().getEmoticonType();
@@ -277,7 +277,7 @@ public class BoardImpl implements Board {
         }
     }
 
-    public void removeFromBoard(ArrayList<LinkedList<Emoticon>> matches) {
+    private void removeFromBoard(ArrayList<LinkedList<Emoticon>> matches) {
         for (List<Emoticon> removeList : matches) {
             for (Emoticon e : removeList) {
                 int x = e.getArrayX();
@@ -289,7 +289,7 @@ public class BoardImpl implements Board {
         }
     }
 
-    public void lowerEmoticons() {
+    private void lowerEmoticons() {
         Log.d(TAG, "in lowerEmoticons()");
         int offScreenStartPosition;
         int runnerY;
