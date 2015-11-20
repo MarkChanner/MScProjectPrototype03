@@ -22,7 +22,6 @@ public class GameView extends SurfaceView implements Runnable {
     private final Rect highlightSelectionRect = new Rect();
     private final Rect highlightMatchRect = new Rect();
     private SurfaceHolder surfaceHolder;
-    private Paint gameBoardColour;
     private Paint gridLineColour;
     private Paint selectionFill;
     private Bitmap gridBitmap;
@@ -46,7 +45,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void prepareCanvas(Context context, int screenX, int screenY) {
-        gameBoardColour = new Paint();
+        Paint gameBoardColour = new Paint();
         selectionFill = new Paint();
         gridLineColour = new Paint();
 
