@@ -26,7 +26,10 @@ public class BoardImpl implements Board {
     public static final String EMPTY = "EMPTY";
     public static final String INVALID_MOVE = "INVALID_MOVE";
     public static final int ONE_SECOND = 1000;
-    private final Monitor monitor = new Monitor();
+    private volatile boolean animatingSwap = false;
+    private volatile boolean animatingDrop = false;
+    private final Object swapObj = new Object();
+    private final Object dropObj = new Object();
 
     private SoundManager soundManager;
     private int emoticonWidth;
@@ -56,7 +59,13 @@ public class BoardImpl implements Board {
             }
         }
         if (!emoticonsSwapping) {
-            monitor.notifySwaps();
+            synchronized (swapObj) {
+                if (animatingSwap) {
+                    animatingSwap = false;
+                    swapObj.notifyAll();
+                }
+
+            }
         }
     }
 
@@ -72,7 +81,41 @@ public class BoardImpl implements Board {
             }
         }
         if (!emoticonsLowering) {
-            monitor.notifyDrops();
+            synchronized (dropObj) {
+                if (animatingDrop) {
+                    animatingDrop = false;
+                    dropObj.notifyAll();
+                }
+
+            }
+        }
+    }
+
+    private void lockSwap() {
+        synchronized (swapObj) {
+            animatingSwap = true;
+            while (animatingSwap) {
+                try {
+                    swapObj.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    Log.e(TAG, "Interrupted Exception in lockSwap()");
+                }
+            }
+        }
+    }
+
+    private void lockDrop() {
+        synchronized (dropObj) {
+            animatingDrop = true;
+            while (animatingDrop) {
+                try {
+                    dropObj.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    Log.e(TAG, "Interrupted Exception in lockDrop()");
+                }
+            }
         }
     }
 
@@ -133,11 +176,8 @@ public class BoardImpl implements Board {
                 e1.setSwappingRight(true);
             }
         }
-        while ((e1.isSwapping() || e2.isSwapping())) {
-            Log.d(TAG, "in loop: calls waitSwaps()");
-            monitor.waitSwaps();
-        }
-
+        lockSwap();
+        Log.d(TAG, "at end of swapSelectedEmoticons, after returning from lockSwap()");
     }
 
     public void swapBack(int[] sel1, int[] sel2) {
@@ -295,19 +335,8 @@ public class BoardImpl implements Board {
                 }
             }
         }
-        waitForAnimationToFinish();
-        Log.d(TAG, "at end of lowerEmoticons, after returning from waitForAnimationToFinish()");
-    }
-
-    private void waitForAnimationToFinish() {
-        Log.d(TAG, "in waitForAnimationToFinish()");
-        for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
-            for (int x = ROW_START; x < X_MAX; x++) {
-                while (emoticons[x][y].isLowering()) {
-                    monitor.waitDrops();
-                }
-            }
-        }
+        lockDrop();
+        Log.d(TAG, "at end of lowerEmoticons, after returning from lockDrop()");
     }
 
     @Override

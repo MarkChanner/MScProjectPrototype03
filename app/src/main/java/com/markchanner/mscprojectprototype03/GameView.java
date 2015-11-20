@@ -154,7 +154,6 @@ public class GameView extends SurfaceView implements Runnable {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Log.d(TAG, "in onTouchEvent(MotionEvent)");
         int screenX = (int) event.getX();
         int screenY = (int) event.getY();
         switch (event.getAction()) {
