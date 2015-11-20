@@ -147,6 +147,7 @@ public class BoardImpl implements Board {
             }
         }
         lockSwap();
+        Log.d(TAG, "Returned from lockSwap()");
     }
 
     private void lockSwap() {
@@ -318,6 +319,7 @@ public class BoardImpl implements Board {
             }
         }
         lockDrop();
+        Log.d(TAG, "Returned from lockDrop()");
     }
 
     private void lockDrop() {
