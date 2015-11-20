@@ -98,7 +98,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void drawIt(Canvas canvas) {
-        Log.d(TAG, "called drawIt");
+        Log.d(TAG, "in drawIt()");
         canvas.drawBitmap(gridBitmap, ZERO, ZERO, null); // Draws background
         // Highlight the background of a selected Emoticon
         canvas.drawRect(highlightSelectionRect, selectionFill);
@@ -122,7 +122,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void control(int ms) {
-        Log.d(TAG, "called control");
+        Log.d(TAG, "in control(int)");
         try {
             Thread.sleep(ms);
         } catch (InterruptedException e) {
@@ -131,7 +131,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void pause() {
-        Log.d(TAG, "called pause");
+        Log.d(TAG, "in pause()");
         running = false;
         while (true) {
             try {
@@ -144,7 +144,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     protected void highlightSelection(int x, int y) {
-        Log.d(TAG, "called startGame");
+        Log.d(TAG, "in startGame(int, int)");
         highlightSelectionRect.set(x * emoWidth, y * emoHeight, (x * emoWidth) + emoWidth, (y * emoHeight) + emoHeight);
     }
 
@@ -154,7 +154,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Log.d(TAG, "called onTouchEvent(MotionEvent)");
+        Log.d(TAG, "in onTouchEvent(MotionEvent)");
         int screenX = (int) event.getX();
         int screenY = (int) event.getY();
         switch (event.getAction()) {
