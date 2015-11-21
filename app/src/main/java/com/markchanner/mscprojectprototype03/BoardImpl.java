@@ -255,6 +255,10 @@ public class BoardImpl implements Board {
             matchingX = findVerticalMatches();
             matchingY = findHorizontalMatches();
         } while (matchesFound(matchingX, matchingY));
+
+        if (!matchAvailable()) {
+            // END GAME
+        }
     }
 
     private void playAudio(GameView view, ArrayList<LinkedList<Emoticon>> matchingX, ArrayList<LinkedList<Emoticon>> matchingY) {
@@ -334,6 +338,109 @@ public class BoardImpl implements Board {
                 }
             }
         }
+    }
+
+    private boolean matchAvailable() {
+        return (verticalMatchAvailable() || horizontalMatchAvailable());
+    }
+
+    private boolean verticalMatchAvailable() {
+        String type;
+        for (int x = ROW_START; x < X_MAX; x++) {
+            for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
+
+                type = emoticons[x][y].getEmoticonType();
+
+                if ((y - 1 >= COLUMN_TOP &&
+                        emoticons[x][y - 1].getEmoticonType().equals(type) &&
+                        verticalA(type, x, y)) ||
+                        (y - 2 >= COLUMN_TOP &&
+                                emoticons[x][y - 2].getEmoticonType().equals(type) &&
+                                verticalB(type, x, y))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean verticalA(String type, int x, int y) {
+        return ((y - 2 >= COLUMN_TOP && verticalAboveA(type, x, y)) ||
+                (y + 1 <= COLUMN_BOTTOM && verticalBelowA(type, x, y)));
+    }
+
+    /**
+     * The condition that (y - 2) must be higher than
+     * COLUMN_TOP was  checked in the calling method
+     */
+    private boolean verticalAboveA(String type, int x, int y) {
+        return ((y - 3 >= COLUMN_TOP && emoticons[x][y - 3].getEmoticonType().equals(type)) ||
+                (x - 1 >= ROW_START && emoticons[x - 1][y - 2].getEmoticonType().equals(type)) ||
+                (x + 1 < X_MAX && emoticons[x + 1][y - 2].getEmoticonType().equals(type)));
+    }
+
+    /**
+     * The condition that (y + 1) must be less than
+     * COLUMN_BOTTOM was checked in the calling method
+     */
+    private boolean verticalBelowA(String type, int x, int y) {
+        return ((y + 2 <= COLUMN_BOTTOM && emoticons[x][y + 2].getEmoticonType().equals(type)) ||
+                (x - 1 >= ROW_START && emoticons[x - 1][y + 1].getEmoticonType().equals(type)) ||
+                (x + 1 < X_MAX && emoticons[x + 1][y + 1].getEmoticonType().equals(type)));
+    }
+
+    private boolean verticalB(String type, int x, int y) {
+        return ((x - 1 >= ROW_START && emoticons[x - 1][y - 1].getEmoticonType().equals(type)) ||
+                (x + 1 < X_MAX && emoticons[x + 1][y - 1].getEmoticonType().equals(type)));
+    }
+
+    private boolean horizontalMatchAvailable() {
+        String type;
+        for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
+            for (int x = ROW_START; x < X_MAX; x++) {
+
+                type = emoticons[x][y].getEmoticonType();
+
+                if ((x + 1 < X_MAX &&
+                        emoticons[x + 1][y].getEmoticonType().equals(type) &&
+                        horizontalA(type, x, y)) ||
+                        (x + 2 < X_MAX && emoticons[x + 2][y].getEmoticonType().equals(type) &&
+                                horizontalB(type, x, y))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean horizontalA(String type, int x, int y) {
+        return ((x + 2 < X_MAX && horizontalRightA(type, x, y)) ||
+                (x - 1 >= ROW_START && horizontalLeftA(type, x, y)));
+    }
+
+    /**
+     * The condition that (x + 2) must be above
+     * below X_MAX was checked in the calling method
+     */
+    private boolean horizontalRightA(String type, int x, int y) {
+        return ((x + 3 < X_MAX && emoticons[x + 3][y].getEmoticonType().equals(type)) ||
+                (y - 1 >= COLUMN_TOP && emoticons[x + 2][y - 1].getEmoticonType().equals(type)) ||
+                (y + 1 <= COLUMN_BOTTOM && emoticons[x + 2][y + 1].getEmoticonType().equals(type)));
+    }
+
+    /**
+     * The condition that (x - 1) must be above equal to or
+     * above  ROW_START was checked in the calling method
+     */
+    private boolean horizontalLeftA(String type, int x, int y) {
+        return ((x - 2 >= ROW_START && emoticons[x - 2][y].getEmoticonType().equals(type)) ||
+                (y - 1 >= COLUMN_TOP && emoticons[x - 1][y - 1].getEmoticonType().equals(type)) ||
+                (y + 1 <= COLUMN_BOTTOM && emoticons[x - 1][y + 1].getEmoticonType().equals(type)));
+    }
+
+    private boolean horizontalB(String type, int x, int y) {
+        return ((y - 1 >= COLUMN_TOP && emoticons[x + 1][y - 1].getEmoticonType().equals(type)) ||
+                (y + 1 <= COLUMN_BOTTOM && emoticons[x + 1][y + 1].getEmoticonType().equals(type)));
     }
 
     @Override
