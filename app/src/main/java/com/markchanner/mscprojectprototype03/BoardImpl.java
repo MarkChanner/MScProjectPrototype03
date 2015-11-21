@@ -239,7 +239,6 @@ public class BoardImpl implements Board {
     }
 
     private boolean matchesFound(ArrayList<LinkedList<Emoticon>> matchingX, ArrayList<LinkedList<Emoticon>> matchingY) {
-        Log.d(TAG, "in matchesFound method");
         return (!(matchingX.isEmpty() && matchingY.isEmpty()));
     }
 
@@ -257,6 +256,7 @@ public class BoardImpl implements Board {
         } while (matchesFound(matchingX, matchingY));
 
         if (!matchAvailable()) {
+            Log.d(TAG, "NO MATCHES AVAILABLE - END GAME CONDITION ENTERED");
             // END GAME
         }
     }
@@ -345,6 +345,7 @@ public class BoardImpl implements Board {
     }
 
     private boolean verticalMatchAvailable() {
+        Log.d(TAG, "in verticalMatchAvailable()");
         String type;
         for (int x = ROW_START; x < X_MAX; x++) {
             for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
@@ -365,6 +366,7 @@ public class BoardImpl implements Board {
     }
 
     private boolean verticalA(String type, int x, int y) {
+        Log.d(TAG, "in verticalA");
         return ((y - 2 >= COLUMN_TOP && verticalAboveA(type, x, y)) ||
                 (y + 1 <= COLUMN_BOTTOM && verticalBelowA(type, x, y)));
     }
@@ -374,6 +376,7 @@ public class BoardImpl implements Board {
      * COLUMN_TOP was  checked in the calling method
      */
     private boolean verticalAboveA(String type, int x, int y) {
+        Log.d(TAG, "in verticalAboveA");
         return ((y - 3 >= COLUMN_TOP && emoticons[x][y - 3].getEmoticonType().equals(type)) ||
                 (x - 1 >= ROW_START && emoticons[x - 1][y - 2].getEmoticonType().equals(type)) ||
                 (x + 1 < X_MAX && emoticons[x + 1][y - 2].getEmoticonType().equals(type)));
@@ -384,17 +387,20 @@ public class BoardImpl implements Board {
      * COLUMN_BOTTOM was checked in the calling method
      */
     private boolean verticalBelowA(String type, int x, int y) {
+        Log.d(TAG, "in verticalBelowA");
         return ((y + 2 <= COLUMN_BOTTOM && emoticons[x][y + 2].getEmoticonType().equals(type)) ||
                 (x - 1 >= ROW_START && emoticons[x - 1][y + 1].getEmoticonType().equals(type)) ||
                 (x + 1 < X_MAX && emoticons[x + 1][y + 1].getEmoticonType().equals(type)));
     }
 
     private boolean verticalB(String type, int x, int y) {
+        Log.d(TAG, "in verticalB");
         return ((x - 1 >= ROW_START && emoticons[x - 1][y - 1].getEmoticonType().equals(type)) ||
                 (x + 1 < X_MAX && emoticons[x + 1][y - 1].getEmoticonType().equals(type)));
     }
 
     private boolean horizontalMatchAvailable() {
+        Log.d(TAG, "in horizontalMatchAvailable()");
         String type;
         for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
             for (int x = ROW_START; x < X_MAX; x++) {
@@ -414,6 +420,7 @@ public class BoardImpl implements Board {
     }
 
     private boolean horizontalA(String type, int x, int y) {
+        Log.d(TAG, "in horizontalA()");
         return ((x + 2 < X_MAX && horizontalRightA(type, x, y)) ||
                 (x - 1 >= ROW_START && horizontalLeftA(type, x, y)));
     }
@@ -423,6 +430,7 @@ public class BoardImpl implements Board {
      * below X_MAX was checked in the calling method
      */
     private boolean horizontalRightA(String type, int x, int y) {
+        Log.d(TAG, "in horizontalRightA()");
         return ((x + 3 < X_MAX && emoticons[x + 3][y].getEmoticonType().equals(type)) ||
                 (y - 1 >= COLUMN_TOP && emoticons[x + 2][y - 1].getEmoticonType().equals(type)) ||
                 (y + 1 <= COLUMN_BOTTOM && emoticons[x + 2][y + 1].getEmoticonType().equals(type)));
@@ -433,12 +441,14 @@ public class BoardImpl implements Board {
      * above  ROW_START was checked in the calling method
      */
     private boolean horizontalLeftA(String type, int x, int y) {
+        Log.d(TAG, "in horizontalLeftA()");
         return ((x - 2 >= ROW_START && emoticons[x - 2][y].getEmoticonType().equals(type)) ||
                 (y - 1 >= COLUMN_TOP && emoticons[x - 1][y - 1].getEmoticonType().equals(type)) ||
                 (y + 1 <= COLUMN_BOTTOM && emoticons[x - 1][y + 1].getEmoticonType().equals(type)));
     }
 
     private boolean horizontalB(String type, int x, int y) {
+        Log.d(TAG, "in horizontalB()");
         return ((y - 1 >= COLUMN_TOP && emoticons[x + 1][y - 1].getEmoticonType().equals(type)) ||
                 (y + 1 <= COLUMN_BOTTOM && emoticons[x + 1][y + 1].getEmoticonType().equals(type)));
     }
