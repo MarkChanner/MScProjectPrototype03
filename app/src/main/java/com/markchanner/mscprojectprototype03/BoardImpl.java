@@ -97,8 +97,8 @@ public class BoardImpl implements Board {
         int[] sel2 = selections.getSelection02();
         swapSelectedEmoticons(sel1, sel2);
 
-        ArrayList<LinkedList<Emoticon>> matchingX = findMatchingColumns();
-        ArrayList<LinkedList<Emoticon>> matchingY = findMatchingRows();
+        ArrayList<LinkedList<Emoticon>> matchingX = findVerticalMatches();
+        ArrayList<LinkedList<Emoticon>> matchingY = findHorizontalMatches();
 
         if (matchesFound(matchingX, matchingY)) {
             modifyBoard(view, matchingX, matchingY);
@@ -170,8 +170,8 @@ public class BoardImpl implements Board {
         swapSelectedEmoticons(sel1, sel2);
     }
 
-    private ArrayList<LinkedList<Emoticon>> findMatchingColumns() {
-        Log.d(TAG, "in findMatchingColumns()");
+    private ArrayList<LinkedList<Emoticon>> findVerticalMatches() {
+        Log.d(TAG, "in findVerticalMatches()");
         LinkedList<Emoticon> consecutiveEmoticons = new LinkedList<>();
         ArrayList<LinkedList<Emoticon>> bigList = new ArrayList<>();
         Emoticon emoticon;
@@ -194,8 +194,8 @@ public class BoardImpl implements Board {
         return bigList;
     }
 
-    private ArrayList<LinkedList<Emoticon>> findMatchingRows() {
-        Log.d(TAG, "in findMatchingRows()");
+    private ArrayList<LinkedList<Emoticon>> findHorizontalMatches() {
+        Log.d(TAG, "in findHorizontalMatches()");
         LinkedList<Emoticon> consecutiveEmoticons = new LinkedList<>();
         ArrayList<LinkedList<Emoticon>> bigList = new ArrayList<>();
         Emoticon emoticon;
@@ -252,8 +252,8 @@ public class BoardImpl implements Board {
             removeFromBoard(matchingX);
             removeFromBoard(matchingY);
             dropEmoticons();
-            matchingX = findMatchingColumns();
-            matchingY = findMatchingRows();
+            matchingX = findVerticalMatches();
+            matchingY = findHorizontalMatches();
         } while (matchesFound(matchingX, matchingY));
     }
 
