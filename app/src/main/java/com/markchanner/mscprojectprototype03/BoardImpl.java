@@ -239,6 +239,7 @@ public class BoardImpl implements Board {
     }
 
     private boolean matchesFound(ArrayList<LinkedList<Emoticon>> matchingX, ArrayList<LinkedList<Emoticon>> matchingY) {
+        Log.d(TAG, "in matchesFound method");
         return (!(matchingX.isEmpty() && matchingY.isEmpty()));
     }
 
