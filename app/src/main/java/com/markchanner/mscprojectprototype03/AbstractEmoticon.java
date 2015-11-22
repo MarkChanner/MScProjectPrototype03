@@ -15,8 +15,8 @@ public abstract class AbstractEmoticon implements Emoticon {
     private int emoHeight;
     private Bitmap bitmap;
     private String emoticonType;
-    private int screenPositionX;
-    private int screenPositionY;
+    private int viewPositionX;
+    private int viewPositionY;
     private int pixelMovement;
 
     volatile boolean lowering;
@@ -34,8 +34,8 @@ public abstract class AbstractEmoticon implements Emoticon {
         this.bitmap = bitmap;
         this.emoticonType = emoticonType;
         pixelMovement = 16;
-        screenPositionX = (arrayX * emoWidth);
-        screenPositionY = (offScreenStartPositionY * emoHeight);
+        viewPositionX = (arrayX * emoWidth);
+        viewPositionY = (offScreenStartPositionY * emoHeight);
         lowering = true;
     }
 
@@ -98,11 +98,11 @@ public abstract class AbstractEmoticon implements Emoticon {
     public void dropEmoticon() {
         int newPosition = (arrayY * emoHeight);
         int pixelRate = pixelMovement;
-        while (screenPositionY + pixelRate > newPosition) {
+        while (viewPositionY + pixelRate > newPosition) {
             pixelRate /= DIVISOR;
         }
-        screenPositionY += pixelRate;
-        if (screenPositionY >= newPosition) {
+        viewPositionY += pixelRate;
+        if (viewPositionY >= newPosition) {
             lowering = false;
         }
     }
@@ -116,11 +116,11 @@ public abstract class AbstractEmoticon implements Emoticon {
     public void swapUp() {
         int newPosition = emoHeight * arrayY;
         int pixelRate = pixelMovement;
-        while (screenPositionY - pixelRate < newPosition) {
+        while (viewPositionY - pixelRate < newPosition) {
             pixelRate /= DIVISOR;
         }
-        screenPositionY -= pixelRate;
-        if (screenPositionY <= newPosition) {
+        viewPositionY -= pixelRate;
+        if (viewPositionY <= newPosition) {
             swappingUp = false;
         }
     }
@@ -134,11 +134,11 @@ public abstract class AbstractEmoticon implements Emoticon {
     public void swapDown() {
         int newPosition = emoHeight * arrayY;
         int pixelRate = pixelMovement;
-        while (screenPositionY + pixelRate > newPosition) {
+        while (viewPositionY + pixelRate > newPosition) {
             pixelRate /= DIVISOR;
         }
-        screenPositionY += pixelRate;
-        if (screenPositionY >= newPosition) {
+        viewPositionY += pixelRate;
+        if (viewPositionY >= newPosition) {
             swappingDown = false;
         }
     }
@@ -152,11 +152,11 @@ public abstract class AbstractEmoticon implements Emoticon {
     public void swapRight() {
         int newPosition = emoWidth * arrayX;
         int pixelRate = pixelMovement;
-        while (screenPositionX + pixelRate > newPosition) {
+        while (viewPositionX + pixelRate > newPosition) {
             pixelRate /= DIVISOR;
         }
-        screenPositionX += pixelRate;
-        if (screenPositionX >= newPosition) {
+        viewPositionX += pixelRate;
+        if (viewPositionX >= newPosition) {
             swappingRight = false;
         }
     }
@@ -170,11 +170,11 @@ public abstract class AbstractEmoticon implements Emoticon {
     public void swapLeft() {
         int newPosition = emoWidth * arrayX;
         int pixelRate = pixelMovement;
-        while (screenPositionX - pixelRate < newPosition) {
+        while (viewPositionX - pixelRate < newPosition) {
             pixelRate /= DIVISOR;
         }
-        screenPositionX -= pixelRate;
-        if (screenPositionX <= newPosition) {
+        viewPositionX -= pixelRate;
+        if (viewPositionX <= newPosition) {
             swappingLeft = false;
         }
     }
@@ -200,18 +200,18 @@ public abstract class AbstractEmoticon implements Emoticon {
     }
 
     @Override
-    public int getScreenPositionX() {
-        return screenPositionX;
+    public int getViewPositionX() {
+        return viewPositionX;
     }
 
     @Override
-    public int getScreenPositionY() {
-        return screenPositionY;
+    public int getViewPositionY() {
+        return viewPositionY;
     }
 
     @Override
-    public void setScreenPositionY(int screenPositionY) {
-        this.screenPositionY = screenPositionY;
+    public void setViewPositionY(int viewPositionY) {
+        this.viewPositionY = viewPositionY;
     }
 
     @Override
@@ -222,5 +222,9 @@ public abstract class AbstractEmoticon implements Emoticon {
     @Override
     public String getEmoticonType() {
         return emoticonType;
+    }
+
+    public void setPixelMovement(int pixelMovement) {
+        this.pixelMovement = pixelMovement;
     }
 }

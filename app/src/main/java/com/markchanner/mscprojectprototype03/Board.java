@@ -5,6 +5,8 @@ package com.markchanner.mscprojectprototype03;
  */
 public interface Board {
 
+    void reset();
+
     void updateSwaps();
 
     void updateDrops();

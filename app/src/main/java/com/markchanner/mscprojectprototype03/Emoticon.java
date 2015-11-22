@@ -47,15 +47,18 @@ public interface Emoticon {
 
     void setArrayY(int y);
 
-    int getScreenPositionX();
+    int getViewPositionX();
 
-    int getScreenPositionY();
+    int getViewPositionY();
 
-    void setScreenPositionY(int screenPositionY);
+    void setViewPositionY(int viewPositionY);
 
     Bitmap getBitmap();
 
     String getEmoticonType();
+
+    void setPixelMovement(int pixelMovement);
+
 
 }
 

@@ -25,6 +25,7 @@ public class GameView extends SurfaceView implements Runnable {
     private final Rect highlightSelectionRect = new Rect();
     private final Rect highlightMatchRect = new Rect();
     private SurfaceHolder surfaceHolder;
+    private Paint gameBoardColour;
     private Paint gridLineColour;
     private Paint selectionFill;
     private Bitmap gridBitmap;
@@ -36,6 +37,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Thread gameViewThread = null;
 
     volatile boolean running = false;
+    private boolean gameEnded = false;
 
     public GameView(Context context, int viewX, int viewY) {
         super(context);
@@ -48,9 +50,9 @@ public class GameView extends SurfaceView implements Runnable {
         prepareCanvas(context, viewX, viewY);
     }
 
-    private void prepareCanvas(Context context, int screenX, int screenY) {
+    private void prepareCanvas(Context context, int viewX, int viewY) {
         Log.d(TAG, "in prepareCanvas(Context, int, int)");
-        Paint gameBoardColour = new Paint();
+        gameBoardColour = new Paint();
         gameBoardColour.setColor(ContextCompat.getColor(context, R.color.gameboard));
 
         selectionFill = new Paint();
@@ -61,22 +63,22 @@ public class GameView extends SurfaceView implements Runnable {
         gridLineColour.setStyle(Paint.Style.STROKE);
         gridLineColour.setStrokeWidth(3f);
 
-        gridBitmap = Bitmap.createBitmap(screenX, screenY, Bitmap.Config.RGB_565);
+        gridBitmap = Bitmap.createBitmap(viewX, viewY, Bitmap.Config.RGB_565);
         Canvas gridCanvas = new Canvas(gridBitmap);
-        gridCanvas.drawRect(ZERO, ZERO, screenX, screenY, gameBoardColour);
-        gridCanvas.drawRect(ZERO, ZERO, screenX, screenY, gridLineColour);
+        gridCanvas.drawRect(ZERO, ZERO, viewX, viewY, gameBoardColour);
+        gridCanvas.drawRect(ZERO, ZERO, viewX, viewY, gridLineColour);
 
         for (int i = 0; i < X_MAX; i++) {
-            gridCanvas.drawLine(i * emoWidth, ZERO, i * emoWidth, screenY, gridLineColour); // Vertical
+            gridCanvas.drawLine(i * emoWidth, ZERO, i * emoWidth, viewY, gridLineColour); // Vertical
         }
         for (int i = 0; i < Y_MAX; i++) {
-            gridCanvas.drawLine(ZERO, i * emoHeight, screenX, i * emoHeight, gridLineColour); // Horizontal
+            gridCanvas.drawLine(ZERO, i * emoHeight, viewX, i * emoHeight, gridLineColour); // Horizontal
         }
         gridCanvas.drawBitmap(gridBitmap, ZERO, ZERO, null);
     }
 
     public void resume() {
-        Log.d(TAG, "in resume()");
+        //Log.d(TAG, "in resume()");
         running = true;
         gameViewThread = new Thread(this);
         gameViewThread.start();
@@ -98,26 +100,35 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void drawIt(Canvas canvas) {
-        Log.d(TAG, "in drawIt()");
-        canvas.drawBitmap(gridBitmap, ZERO, ZERO, null); // Draws background
-        // Highlight the background of a selected Emoticon
-        canvas.drawRect(highlightSelectionRect, selectionFill);
-        canvas.drawRect(highlightSelectionRect, gridLineColour);
+        if (!gameEnded) {
+            //Log.d(TAG, "in drawIt()");
+            canvas.drawBitmap(gridBitmap, ZERO, ZERO, null); // Draws background
+            // Highlight the background of a selected Emoticon
+            canvas.drawRect(highlightSelectionRect, selectionFill);
+            canvas.drawRect(highlightSelectionRect, gridLineColour);
 
-        Emoticon[][] emoticons = board.getEmoticons();
-        for (int y = Y_MAX - 1; y >= 0; y--) {
-            for (int x = 0; x < X_MAX; x++) {
-                Emoticon e = emoticons[x][y];
+            Emoticon[][] emoticons = board.getEmoticons();
+            for (int y = Y_MAX - 1; y >= 0; y--) {
+                for (int x = 0; x < X_MAX; x++) {
+                    Emoticon e = emoticons[x][y];
 
-                if (e.isPartOfMatch()) {
-                    int emoX = e.getScreenPositionX();
-                    int emoY = e.getScreenPositionY();
-                    highlightMatchRect.set(emoX, emoY, (emoX + emoWidth), (emoY + emoHeight));
-                    canvas.drawRect(highlightMatchRect, selectionFill);
-                    canvas.drawRect(highlightMatchRect, gridLineColour);
+                    if (e.isPartOfMatch()) {
+                        int emoX = e.getViewPositionX();
+                        int emoY = e.getViewPositionY();
+                        highlightMatchRect.set(emoX, emoY, (emoX + emoWidth), (emoY + emoHeight));
+                        canvas.drawRect(highlightMatchRect, selectionFill);
+                        canvas.drawRect(highlightMatchRect, gridLineColour);
+                    }
+                    canvas.drawBitmap(e.getBitmap(), e.getViewPositionX(), e.getViewPositionY(), null);
                 }
-                canvas.drawBitmap(e.getBitmap(), e.getScreenPositionX(), e.getScreenPositionY(), null);
             }
+        } else {
+            canvas.drawRect(ZERO, ZERO, getWidth(), getHeight(), gameBoardColour);
+            gridLineColour.setTextSize(80);
+            gridLineColour.setStyle(Paint.Style.FILL);
+            gridLineColour.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText("Game Over", (emoWidth * 4), 100, gridLineColour);
+            canvas.drawText("Tap to Play Again!", (emoWidth * 4), 300, gridLineColour);
         }
     }
 
@@ -144,7 +155,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     protected void highlightSelection(int x, int y) {
-        Log.d(TAG, "in startGame(int, int)");
+        //Log.d(TAG, "in restartGame(int, int)");
         highlightSelectionRect.set(x * emoWidth, y * emoHeight, (x * emoWidth) + emoWidth, (y * emoHeight) + emoHeight);
     }
 
@@ -159,7 +170,14 @@ public class GameView extends SurfaceView implements Runnable {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 Log.d(TAG, "in onTouchEvent(MotionEvent)**********************************");
-                storeSelection(screenX / emoWidth, screenY / emoHeight);
+                if (!gameEnded) {
+                    storeSelection(screenX / emoWidth, screenY / emoHeight);
+                } else {
+                    Canvas gridCanvas = new Canvas(gridBitmap);
+                    gameEnded = false;
+                    selections.resetUserSelections();
+                    board.reset();
+                }
                 break;
         }
         return true;
@@ -187,5 +205,9 @@ public class GameView extends SurfaceView implements Runnable {
         } else {
             selections.resetUserSelections();
         }
+    }
+
+    protected void setGameEnded(Boolean bool) {
+        gameEnded = bool;
     }
 }

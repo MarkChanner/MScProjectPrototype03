@@ -30,6 +30,7 @@ public class BoardImpl implements Board {
     private final Object swapLock = new Object();
     private final Object dropLock = new Object();
 
+    private Context context;
     private SoundManager soundManager;
     private int emoticonWidth;
     private int emoticonHeight;
@@ -37,18 +38,24 @@ public class BoardImpl implements Board {
     private BoardPopulator populator;
 
     public BoardImpl(Context context, int emoticonWidth, int emoticonHeight) {
-        this.soundManager = new SoundManager();
-        this.soundManager.loadSound(context);
+        this.context = context;
         this.emoticonWidth = emoticonWidth;
         this.emoticonHeight = emoticonHeight;
+        this.soundManager = new SoundManager();
+        this.soundManager.loadSound(context);
         this.emoticons = new AbstractEmoticon[X_MAX][Y_MAX];
-        this.populator = new BoardPopulatorImpl();
+        this.populator = new BoardPopulatorMock01();
         this.populator.populateBoard(context, this, emoticonWidth, emoticonHeight);
     }
 
     @Override
+    public void reset() {
+        populator.populateBoard(context, this, emoticonWidth, emoticonHeight);
+    }
+
+    @Override
     public void updateSwaps() {
-        Log.d(TAG, "FROM RUN(): in updateSwaps()");
+        //Log.d(TAG, "FROM RUN(): in updateSwaps()");
         boolean emoticonsSwapping = false;
         for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
             for (int x = ROW_START; x < X_MAX; x++) {
@@ -70,7 +77,7 @@ public class BoardImpl implements Board {
 
     @Override
     public void updateDrops() {
-        Log.d(TAG, "FROM RUN(): in updateDrops");
+        //Log.d(TAG, "FROM RUN(): in updateDrops");
         boolean emoticonsDropping = false;
         for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
             for (int x = ROW_START; x < X_MAX; x++) {
@@ -92,7 +99,7 @@ public class BoardImpl implements Board {
 
     @Override
     public void processSelections(GameView view, Selection selections) {
-        Log.d(TAG, "in processSelections(GameView, Selection)");
+        //Log.d(TAG, "in processSelections(GameView, Selection)");
         int[] sel1 = selections.getSelection01();
         int[] sel2 = selections.getSelection02();
         swapSelectedEmoticons(sel1, sel2);
@@ -110,7 +117,7 @@ public class BoardImpl implements Board {
     }
 
     public void swapSelectedEmoticons(int[] sel1, int[] sel2) {
-        Log.d(TAG, "in swapSelectedEmoticons(int[] int[])");
+        //Log.d(TAG, "in swapSelectedEmoticons(int[] int[])");
         int emo01X = emoticons[sel1[X]][sel1[Y]].getArrayX();
         int emo01Y = emoticons[sel1[X]][sel1[Y]].getArrayY();
         Emoticon newEmoticon2 = emoticons[sel1[X]][sel1[Y]];
@@ -148,11 +155,11 @@ public class BoardImpl implements Board {
             }
         }
         waitForSwapAnimationToFinish();
-        Log.d(TAG, "Returned from waitForSwapAnimationToFinish()");
+        //Log.d(TAG, "Returned from waitForSwapAnimationToFinish()");
     }
 
     private void waitForSwapAnimationToFinish() {
-        Log.d(TAG, "in waitForSwapAnimationToFinish()");
+        //Log.d(TAG, "in waitForSwapAnimationToFinish()");
         synchronized (swapLock) {
             animatingSwap = true;
             while (animatingSwap) {
@@ -171,7 +178,7 @@ public class BoardImpl implements Board {
     }
 
     private ArrayList<LinkedList<Emoticon>> findVerticalMatches() {
-        Log.d(TAG, "in findVerticalMatches()");
+        //Log.d(TAG, "in findVerticalMatches()");
         LinkedList<Emoticon> consecutiveEmoticons = new LinkedList<>();
         ArrayList<LinkedList<Emoticon>> bigList = new ArrayList<>();
         Emoticon emoticon;
@@ -195,7 +202,7 @@ public class BoardImpl implements Board {
     }
 
     private ArrayList<LinkedList<Emoticon>> findHorizontalMatches() {
-        Log.d(TAG, "in findHorizontalMatches()");
+        //Log.d(TAG, "in findHorizontalMatches()");
         LinkedList<Emoticon> consecutiveEmoticons = new LinkedList<>();
         ArrayList<LinkedList<Emoticon>> bigList = new ArrayList<>();
         Emoticon emoticon;
@@ -239,7 +246,7 @@ public class BoardImpl implements Board {
     }
 
     private boolean matchesFound(ArrayList<LinkedList<Emoticon>> matchingX, ArrayList<LinkedList<Emoticon>> matchingY) {
-        Log.d(TAG, "in matchesFound method");
+        // Log.d(TAG, "in matchesFound method");
         return (!(matchingX.isEmpty() && matchingY.isEmpty()));
     }
 
@@ -258,12 +265,24 @@ public class BoardImpl implements Board {
 
         if (!matchAvailable()) {
             Log.d(TAG, "NO MATCHES AVAILABLE - END GAME CONDITION ENTERED");
-            // END GAME
+            setToDrop();
+            dropEmoticons();
+            view.setGameEnded(true);
+        }
+    }
+
+    private void setToDrop() {
+        for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
+            for (int x = ROW_START; x < X_MAX; x++) {
+                emoticons[x][y].setArrayY(Y_MAX);
+                emoticons[x][y].setPixelMovement(32);
+                emoticons[x][y].setDropping(true);
+            }
         }
     }
 
     private void playAudio(GameView view, ArrayList<LinkedList<Emoticon>> matchingX, ArrayList<LinkedList<Emoticon>> matchingY) {
-        Log.d(TAG, "in PlayAudio method");
+        //Log.d(TAG, "in PlayAudio method");
         if (!(matchingX.isEmpty())) {
             String matchingTypeX = matchingX.get(0).getFirst().getEmoticonType();
             soundManager.playSound(matchingTypeX);
@@ -295,7 +314,7 @@ public class BoardImpl implements Board {
     }
 
     private void dropEmoticons() {
-        Log.d(TAG, "in dropEmoticons()");
+        //Log.d(TAG, "in dropEmoticons()");
         int offScreenStartPosition;
         int runnerY;
 
@@ -324,11 +343,11 @@ public class BoardImpl implements Board {
             }
         }
         waitForDropAnimationToComplete();
-        Log.d(TAG, "Returned from waitForDropAnimationToComplete()");
+        //Log.d(TAG, "Returned from waitForDropAnimationToComplete()");
     }
 
     private void waitForDropAnimationToComplete() {
-        Log.d(TAG, "in waitForDropAnimationToComplete()");
+        //Log.d(TAG, "in waitForDropAnimationToComplete()");
         synchronized (dropLock) {
             animatingDrop = true;
             while (animatingDrop) {
