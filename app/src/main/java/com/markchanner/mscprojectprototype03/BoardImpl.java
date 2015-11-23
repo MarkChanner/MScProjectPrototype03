@@ -44,7 +44,7 @@ public class BoardImpl implements Board {
         this.soundManager = new SoundManager();
         this.soundManager.loadSound(context);
         this.emoticons = new AbstractEmoticon[X_MAX][Y_MAX];
-        this.populator = new BoardPopulatorMock01();
+        this.populator = new BoardPopulatorImpl();
         this.populator.populateBoard(context, this, emoticonWidth, emoticonHeight);
     }
 

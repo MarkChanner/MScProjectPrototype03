@@ -51,8 +51,6 @@ public interface Emoticon {
 
     int getViewPositionY();
 
-    void setViewPositionY(int viewPositionY);
-
     Bitmap getBitmap();
 
     String getEmoticonType();
