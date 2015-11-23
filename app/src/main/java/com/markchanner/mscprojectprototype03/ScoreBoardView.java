@@ -23,7 +23,7 @@ public class ScoreBoardView extends View {
         scoreBitmap = Bitmap.createBitmap(viewX, viewY, Bitmap.Config.RGB_565);
         Canvas scoreCanvas = new Canvas(scoreBitmap);
 
-        paint.setColor(context.getResources().getColor(R.color.scoreboard));
+        paint.setColor(context.getResources().getColor(R.color.niceyellow));
         scoreCanvas.drawRect(ZERO, ZERO, viewX, viewY, paint);
 
         paint.setColor(Color.BLACK);
