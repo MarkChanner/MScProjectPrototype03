@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.widget.TextView;
@@ -18,7 +17,6 @@ public class ScoreBoardView extends TextView {
     private int pointsX;
     private int pointsY;
     private int score;
-    private Rect dirty;
 
     public ScoreBoardView(Context context, int viewX, int viewY) {
         super(context);
@@ -31,7 +29,7 @@ public class ScoreBoardView extends TextView {
 
         paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(ContextCompat.getColor(context, R.color.niceyellow));
+        paint.setColor(ContextCompat.getColor(context, R.color.scoreboard));
         tempCanvas.drawRect(ZERO, ZERO, viewX, viewY, paint);
 
         paint.setStyle(Paint.Style.STROKE);
@@ -43,15 +41,13 @@ public class ScoreBoardView extends TextView {
         paint.setTextAlign(Paint.Align.CENTER);
         float scale = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 20, context.getResources().getDisplayMetrics());
         paint.setTextSize(scale);
-        tempCanvas.drawText("SCORE", (viewX / 2), (viewY / 10), paint);
+        tempCanvas.drawText("SCORE", (viewX / 2), (viewY / 4), paint);
 
-        scale = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 50, context.getResources().getDisplayMetrics());
+        scale = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 30, context.getResources().getDisplayMetrics());
         paint.setTextSize(scale);
         pointsX = (viewX / 2);
-        pointsY = (viewY / 3);
-        dirty = new Rect();
-        dirty.set(ZERO, pointsY, viewX, pointsY * 2);
-        invalidate(dirty);
+        pointsY = (viewY / 2);
+        invalidate();
     }
 
     @Override

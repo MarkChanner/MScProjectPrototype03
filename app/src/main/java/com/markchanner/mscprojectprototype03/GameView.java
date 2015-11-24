@@ -31,6 +31,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private Paint gameBoardColour;
     private Paint gridLineColour;
+    private Paint borderColour;
     private Paint selectionFill;
     private Bitmap gridBitmap;
     private Selection selections;
@@ -63,10 +64,16 @@ public class GameView extends SurfaceView implements Runnable {
         gridLineColour.setStyle(Paint.Style.STROKE);
         gridLineColour.setStrokeWidth(3f);
 
+        borderColour = new Paint();
+        borderColour.setColor(ContextCompat.getColor(context, R.color.border));
+        borderColour.setStyle(Paint.Style.STROKE);
+        borderColour.setStrokeWidth(8f);
+
+
         gridBitmap = Bitmap.createBitmap(viewX, viewY, Bitmap.Config.RGB_565);
         Canvas gridCanvas = new Canvas(gridBitmap);
         gridCanvas.drawRect(ZERO, ZERO, viewX, viewY, gameBoardColour);
-        gridCanvas.drawRect(ZERO, ZERO, viewX, viewY, gridLineColour);
+
 
         for (int i = 0; i < X_MAX; i++) {
             gridCanvas.drawLine(i * emoWidth, ZERO, i * emoWidth, viewY, gridLineColour); // Vertical
@@ -74,6 +81,7 @@ public class GameView extends SurfaceView implements Runnable {
         for (int i = 0; i < Y_MAX; i++) {
             gridCanvas.drawLine(ZERO, i * emoHeight, viewX, i * emoHeight, gridLineColour); // Horizontal
         }
+        gridCanvas.drawRect(ZERO, ZERO, viewX, viewY, borderColour);
         gridCanvas.drawBitmap(gridBitmap, ZERO, ZERO, null);
     }
 
@@ -119,7 +127,7 @@ public class GameView extends SurfaceView implements Runnable {
                         canvas.drawRect(highlightMatchRect, selectionFill);
                         canvas.drawRect(highlightMatchRect, gridLineColour);
                     }
-                    canvas.drawBitmap(e.getBitmap(), e.getViewPositionX(), e.getViewPositionY(), null);
+                    canvas.drawBitmap(e.getBitmap(), 5 + e.getViewPositionX(), e.getViewPositionY(), null);
                 }
             }
         } else {

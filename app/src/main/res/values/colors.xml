@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#007034</color>
-    <color name="scoreboard">#5DB89D</color>
-    <color name="gameboard">#8C8535</color>
-    <color name="highlightbackground">#FFCA00</color>
-    <color name="reservepink">#F26547</color>
-    <color name="nicehkaki">#AAA222</color>
-    <color name="niceyellow">#EEE111</color>
+    <color name="background">#194673</color>
+    <color name="gameboard">#6991C2</color>
+    <color name="scoreboard">#8EAFD7</color>
+    <color name="highlightbackground">#C3D7ED</color>
+    <color name="border">#88CDEA</color>
+
 
 </resources>

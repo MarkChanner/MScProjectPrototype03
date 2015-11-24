@@ -59,13 +59,15 @@ public class GameActivity extends Activity {
         int sizeY = (size.y - (screenLayout.getPaddingTop() + screenLayout.getPaddingBottom()));
         int gameViewX = (int) (sizeX * 0.8);
         int scoreViewX = (int) (sizeX * 0.2);
-        ScoreBoardView scoreView = new ScoreBoardView(this, scoreViewX, sizeY);
-        LinearLayout.LayoutParams scoreParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(scoreViewX, sizeY));
+
+        ScoreBoardView scoreView = new ScoreBoardView(this, scoreViewX, sizeY / 3);
+        LinearLayout.LayoutParams scoreParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(scoreViewX, sizeY / 3));
         screenLayout.addView(scoreView, scoreParams);
 
         int emoWidth = gameViewX / X_MAX;
         int emoHeight = sizeY / Y_MAX;
         Board boardLogic = new BoardImpl(this, scoreView, emoWidth, emoHeight);
+
         gameView = new GameView(this, boardLogic, gameViewX, sizeY);
         LinearLayout.LayoutParams boardParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(gameViewX, sizeY));
         boardParams.setMargins(screenLayout.getPaddingLeft(), 0, gameViewX, 0);

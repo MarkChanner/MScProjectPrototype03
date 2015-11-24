@@ -57,7 +57,7 @@ public class BoardImpl implements Board {
 
     @Override
     public void updateSwaps() {
-        Log.d(TAG, "FROM RUN(): in updateSwaps()");
+        //Log.d(TAG, "FROM RUN(): in updateSwaps()");
         boolean emoticonsSwapping = false;
         for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
             for (int x = ROW_START; x < X_MAX; x++) {
@@ -79,7 +79,7 @@ public class BoardImpl implements Board {
 
     @Override
     public void updateDrops() {
-        Log.d(TAG, "FROM RUN(): in updateDrops");
+        //Log.d(TAG, "FROM RUN(): in updateDrops");
         boolean emoticonsDropping = false;
         for (int y = COLUMN_BOTTOM; y >= COLUMN_TOP; y--) {
             for (int x = ROW_START; x < X_MAX; x++) {
