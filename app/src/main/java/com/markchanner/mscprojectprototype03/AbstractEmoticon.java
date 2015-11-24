@@ -16,7 +16,7 @@ public abstract class AbstractEmoticon implements Emoticon {
     private String emoticonType;
     private int screenPositionX;
     private int screenPositionY;
-    private int pixelMovement;
+    private int pixelMovement = 16;
 
     volatile boolean dropping;
     volatile boolean swappingUp;
@@ -32,7 +32,6 @@ public abstract class AbstractEmoticon implements Emoticon {
         this.emoHeight = emoHeight;
         this.bitmap = bitmap;
         this.emoticonType = emoticonType;
-        pixelMovement = 10;
         screenPositionX = (arrayX * emoWidth);
         screenPositionY = (offScreenStartPositionY * emoHeight);
         dropping = true;

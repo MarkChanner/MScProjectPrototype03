@@ -78,7 +78,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void resume() {
-        //Log.d(TAG, "in resume()");
+        Log.d(TAG, "in resume()");
         running = true;
         gameViewThread = new Thread(this);
         gameViewThread.start();
@@ -101,7 +101,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     public void drawIt(Canvas canvas) {
         if (!gameEnded) {
-            //Log.d(TAG, "in drawIt()");
+            Log.d(TAG, "in drawIt()");
             canvas.drawBitmap(gridBitmap, ZERO, ZERO, null); // Draws background
             // Highlight the background of a selected Emoticon
             canvas.drawRect(highlightSelectionRect, selectionFill);
@@ -155,7 +155,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     protected void highlightSelection(int x, int y) {
-        //Log.d(TAG, "in restartGame(int, int)");
+        Log.d(TAG, "in restartGame(int, int)");
         highlightSelectionRect.set(x * emoWidth, y * emoHeight, (x * emoWidth) + emoWidth, (y * emoHeight) + emoHeight);
     }
 

@@ -62,6 +62,6 @@ public class ScoreBoardView extends TextView {
 
     protected void incrementScore(int points) {
         score += points;
-        invalidate(dirty);
+        invalidate();
     }
 }
