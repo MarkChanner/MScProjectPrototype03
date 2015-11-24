@@ -9,7 +9,7 @@ public class MockEmoticon extends AbstractEmoticon {
 
     public MockEmoticon(int x, int y, int emoWidth, int emoHeight, Bitmap mockBitmap, String emoticonType) {
         super(x, y, emoWidth, emoHeight, mockBitmap, emoticonType, y);
-        super.lowering = false;
+        super.dropping = false;
     }
 }
 

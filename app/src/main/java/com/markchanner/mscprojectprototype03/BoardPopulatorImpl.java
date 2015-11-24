@@ -40,7 +40,7 @@ public class BoardPopulatorImpl implements BoardPopulator {
         Emoticon[][] emoticons = board.getEmoticons();
         Emoticon newEmoticon;
         for (int x = ROW_START; x < X_MAX; x++) {
-            int dropGap = 0; // Y_MAX;
+            int dropGap = Y_MAX;
             for (int y = COLUMN_TOP; y < Y_MAX; y++) {
                 do {
 

@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 public abstract class AbstractEmoticon implements Emoticon {
 
     public static final int DIVISOR = 2;
-
     private int arrayX;
     private int arrayY;
     private int emoWidth;
@@ -19,7 +18,7 @@ public abstract class AbstractEmoticon implements Emoticon {
     private int screenPositionY;
     private int pixelMovement;
 
-    volatile boolean lowering;
+    volatile boolean dropping;
     volatile boolean swappingUp;
     volatile boolean swappingDown;
     volatile boolean swappingRight;
@@ -33,10 +32,10 @@ public abstract class AbstractEmoticon implements Emoticon {
         this.emoHeight = emoHeight;
         this.bitmap = bitmap;
         this.emoticonType = emoticonType;
-        pixelMovement = emoHeight / 5;
+        pixelMovement = 10;
         screenPositionX = (arrayX * emoWidth);
         screenPositionY = (offScreenStartPositionY * emoHeight);
-        lowering = true;
+        dropping = true;
     }
 
     @Override
@@ -69,12 +68,12 @@ public abstract class AbstractEmoticon implements Emoticon {
 
     @Override
     public boolean isDropping() {
-        return lowering;
+        return dropping;
     }
 
     @Override
     public void updateDropping() {
-        if (lowering) {
+        if (dropping) {
             dropEmoticon();
         }
     }
@@ -91,7 +90,7 @@ public abstract class AbstractEmoticon implements Emoticon {
 
     @Override
     public void setDropping(boolean bool) {
-        lowering = bool;
+        dropping = bool;
     }
 
     @Override
@@ -103,7 +102,7 @@ public abstract class AbstractEmoticon implements Emoticon {
         }
         screenPositionY += pixelRate;
         if (screenPositionY >= newPosition) {
-            lowering = false;
+            dropping = false;
         }
     }
 

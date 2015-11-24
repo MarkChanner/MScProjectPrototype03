@@ -5,29 +5,23 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.widget.TextView;
 
-public class ScoreBoardView extends SurfaceView implements Runnable {
+public class ScoreBoardView extends TextView {
 
     public static final int ZERO = 0;
-    private SurfaceHolder holder;
     private Bitmap scoreBitmap;
     private Paint paint;
-    private int score = 0;
     private int pointsX;
     private int pointsY;
-
-    private Thread runner = null;
-    volatile boolean running = false;
-    private final Object lock = new Object();
-    volatile boolean needsUpdating = false;
+    private int score;
+    private Rect dirty;
 
     public ScoreBoardView(Context context, int viewX, int viewY) {
         super(context);
-        holder = getHolder();
         prepareCanvas(context, viewX, viewY);
     }
 
@@ -55,57 +49,19 @@ public class ScoreBoardView extends SurfaceView implements Runnable {
         paint.setTextSize(scale);
         pointsX = (viewX / 2);
         pointsY = (viewY / 3);
-    }
-
-    public void resume() {
-        running = true;
-        runner = new Thread(this);
-        runner.start();
-    }
-
-    public void pause() {
-        running = false;
-        while (true) {
-            try {
-                runner.join();
-                return;
-            } catch (InterruptedException e) {
-                // try again
-            }
-        }
+        dirty = new Rect();
+        dirty.set(ZERO, pointsY, viewX, pointsY * 2);
+        invalidate(dirty);
     }
 
     @Override
-    public void run() {
-        Canvas canvas;
-        while (running) {
-            if (holder.getSurface().isValid()) {
-                canvas = holder.lockCanvas();
-                drawIt(canvas);
-                holder.unlockCanvasAndPost(canvas);
-                synchronized (lock) {
-                    while (!needsUpdating) {
-                        try {
-                            lock.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public void drawIt(Canvas canvas) {
+    public void onDraw(Canvas canvas) {
         canvas.drawBitmap(scoreBitmap, ZERO, ZERO, null);
         canvas.drawText("" + score, pointsX, pointsY, paint);
     }
 
     protected void incrementScore(int points) {
-        synchronized (lock) {
-            score += points;
-            needsUpdating = true;
-            lock.notifyAll();
-        }
+        score += points;
+        invalidate(dirty);
     }
 }

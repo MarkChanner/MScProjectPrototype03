@@ -17,8 +17,10 @@ public class BoardImpl implements Board {
 
     public static final int X = 0;
     public static final int Y = 1;
-    public static final int X_MAX = 8;
-    public static final int Y_MAX = 7;
+    //public static final int X_MAX = 8;
+    //public static final int Y_MAX = 7;
+    public static final int X_MAX = GameActivity.X_MAX;
+    public static final int Y_MAX = GameActivity.Y_MAX;
     public static final int ROW_START = 0;
     public static final int COLUMN_TOP = 0;
     public static final int COLUMN_BOTTOM = (Y_MAX - 1);

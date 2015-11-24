@@ -17,36 +17,36 @@ import android.view.MotionEvent;
  */
 public class GameView extends SurfaceView implements Runnable {
 
-    private final static String TAG = "GameView";
-    public static final int X_MAX = BoardImpl.X_MAX;
-    public static final int Y_MAX = BoardImpl.Y_MAX;
+    public static final String TAG = "GameView";
+    public static final int X_MAX = GameActivity.X_MAX;
+    public static final int Y_MAX = GameActivity.Y_MAX;
     public static final int ZERO = 0;
 
     private final Rect highlightSelectionRect = new Rect();
     private final Rect highlightMatchRect = new Rect();
     private SurfaceHolder surfaceHolder;
+    private Board gameLogic;
+    private int emoWidth;
+    private int emoHeight;
+
     private Paint gameBoardColour;
     private Paint gridLineColour;
     private Paint selectionFill;
     private Bitmap gridBitmap;
-
-    private int emoWidth;
-    private int emoHeight;
-    private Board board;
     private Selection selections;
     private Thread gameViewThread = null;
 
     volatile boolean running = false;
-    private boolean gameEnded = false;
+    volatile boolean gameEnded = false;
 
-    public GameView(Context context, ScoreBoardView scoreBoardView, int viewX, int viewY) {
+    public GameView(Context context, Board gameLogic, int viewX, int viewY) {
         super(context);
         Log.d(TAG, "in constructor");
-        surfaceHolder = getHolder();
+        this.gameLogic = gameLogic;
         emoWidth = viewX / X_MAX;
         emoHeight = viewY / Y_MAX;
-        board = new BoardImpl(context, scoreBoardView, emoWidth, emoHeight);
         selections = new SelectionImpl();
+        surfaceHolder = getHolder();
         prepareCanvas(context, viewX, viewY);
     }
 
@@ -91,8 +91,8 @@ public class GameView extends SurfaceView implements Runnable {
         while (running) {
             if (surfaceHolder.getSurface().isValid()) {
                 canvas = surfaceHolder.lockCanvas();
-                board.updateSwaps();
-                board.updateDrops();
+                gameLogic.updateSwaps();
+                gameLogic.updateDrops();
                 drawIt(canvas);
                 surfaceHolder.unlockCanvasAndPost(canvas);
             }
@@ -107,7 +107,7 @@ public class GameView extends SurfaceView implements Runnable {
             canvas.drawRect(highlightSelectionRect, selectionFill);
             canvas.drawRect(highlightSelectionRect, gridLineColour);
 
-            Emoticon[][] emoticons = board.getEmoticons();
+            Emoticon[][] emoticons = gameLogic.getEmoticons();
             for (int y = Y_MAX - 1; y >= 0; y--) {
                 for (int x = 0; x < X_MAX; x++) {
                     Emoticon e = emoticons[x][y];
@@ -175,7 +175,7 @@ public class GameView extends SurfaceView implements Runnable {
                 } else {
                     gameEnded = false;
                     selections.resetUserSelections();
-                    board.reset();
+                    gameLogic.reset();
                 }
                 break;
         }
@@ -196,7 +196,7 @@ public class GameView extends SurfaceView implements Runnable {
         unHighlightSelection();
         if (!(selections.sameSelectionMadeTwice())) {
             if (selections.adjacentSelections()) {
-                board.processSelections(this, selections);
+                gameLogic.processSelections(this, selections);
             } else {
                 highlightSelection(x, y);
                 selections.setSelection02ToSelection01();
