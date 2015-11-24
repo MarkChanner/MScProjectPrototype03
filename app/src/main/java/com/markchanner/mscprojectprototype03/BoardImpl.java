@@ -2,6 +2,7 @@ package com.markchanner.mscprojectprototype03;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -37,8 +38,11 @@ public class BoardImpl implements Board {
     private Emoticon[][] emoticons;
     private BoardPopulator populator;
 
-    public BoardImpl(Context context, int emoticonWidth, int emoticonHeight) {
+    private ScoreBoardView scoreBoardView;
+
+    public BoardImpl(Context context, ScoreBoardView scoreBoardView, int emoticonWidth, int emoticonHeight) {
         this.context = context;
+        this.scoreBoardView = scoreBoardView;
         this.emoticonWidth = emoticonWidth;
         this.emoticonHeight = emoticonHeight;
         this.soundManager = new SoundManager();
@@ -295,6 +299,7 @@ public class BoardImpl implements Board {
 
     private void highlightMatches(ArrayList<LinkedList<Emoticon>> matches) {
         for (List<Emoticon> removeList : matches) {
+            scoreBoardView.incrementScore(removeList.size());
             for (Emoticon e : removeList) {
                 e.setIsPartOfMatch(true);
             }

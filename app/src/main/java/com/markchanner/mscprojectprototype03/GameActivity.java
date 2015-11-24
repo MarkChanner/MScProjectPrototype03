@@ -23,6 +23,7 @@ public class GameActivity extends Activity {
     private final static String TAG = "GameActivity";
     private MediaPlayer mediaPlayer;
     private GameView gameBoardView;
+    private ScoreBoardView scoreBoardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +66,11 @@ public class GameActivity extends Activity {
         int scoreX = (int) (sizeX * 0.2);
         int scoreY = boardY;
 
-        ScoreBoardView scoreBoardView = new ScoreBoardView(this, scoreX, scoreY);
+        scoreBoardView = new ScoreBoardView(this, scoreX, scoreY);
         LinearLayout.LayoutParams scoreParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(scoreX, scoreY));
         layout.addView(scoreBoardView, scoreParams);
 
-        gameBoardView = new GameView(this, boardX, boardY);
+        gameBoardView = new GameView(this, scoreBoardView, boardX, boardY);
         LinearLayout.LayoutParams boardParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(boardX, boardY));
         boardParams.setMargins(gameboardLeftMargin, 0, boardX, 0);
         layout.addView(gameBoardView, boardParams);
@@ -83,6 +84,8 @@ public class GameActivity extends Activity {
             mediaPlayer.start();
         }
         gameBoardView.resume();
+        scoreBoardView.resume();
+
     }
 
     @Override
@@ -97,5 +100,7 @@ public class GameActivity extends Activity {
             }
         }
         gameBoardView.pause();
+        scoreBoardView.pause();
+
     }
 }

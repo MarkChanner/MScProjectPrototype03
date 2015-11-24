@@ -39,13 +39,13 @@ public class GameView extends SurfaceView implements Runnable {
     volatile boolean running = false;
     private boolean gameEnded = false;
 
-    public GameView(Context context, int viewX, int viewY) {
+    public GameView(Context context, ScoreBoardView scoreBoardView, int viewX, int viewY) {
         super(context);
         Log.d(TAG, "in constructor");
         surfaceHolder = getHolder();
         emoWidth = viewX / X_MAX;
         emoHeight = viewY / Y_MAX;
-        board = new BoardImpl(context, emoWidth, emoHeight);
+        board = new BoardImpl(context, scoreBoardView, emoWidth, emoHeight);
         selections = new SelectionImpl();
         prepareCanvas(context, viewX, viewY);
     }
@@ -169,11 +169,10 @@ public class GameView extends SurfaceView implements Runnable {
         int screenY = (int) event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                Log.d(TAG, "in onTouchEvent(MotionEvent)**********************************");
+                Log.d(TAG, "***************in onTouchEvent(MotionEvent)****************");
                 if (!gameEnded) {
                     storeSelection(screenX / emoWidth, screenY / emoHeight);
                 } else {
-                    Canvas gridCanvas = new Canvas(gridBitmap);
                     gameEnded = false;
                     selections.resetUserSelections();
                     board.reset();
