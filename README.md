@@ -16,7 +16,7 @@ when a match is made, that children will be able to practice recognizing and dif
 emoticons. To aid this, each emotion is emphasized through a combination of graphics, sounds, and points.
 
 ##Improvements made since Prototype02
-* Class structure changed to form a pattern more similar to the of MVC
+* Class structure changed to form a pattern more similar to that of MVC
 * Threads now efficiently synchronized by calling wait()/notifyAll() on a lock object, rather than wasting
 CPU cycles through polling
 * Manipulation of the board now handled within each method rather than calling update(), which loops through
